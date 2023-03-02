@@ -38,6 +38,8 @@
                                 <option>China</option>
                                 <option>America</option>
                                 <option>England</option>
+                                <option>America</option>
+                                <option>England</option>
                             </select>
                             <div class="select_arrow"></div>
                         </div>
