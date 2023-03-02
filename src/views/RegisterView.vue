@@ -36,7 +36,13 @@
                                 <option>Select a country</option>
                                 <option>Thai</option>
                                 <option>China</option>
-                                <option>America</option>
+                                <option>Thai</option>
+                                <option>China</option>
+                                <option>Thai</option>
+                                <option>China</option>
+                                <option>Thai</option>
+                                <option>China</option>
+                    
                             </select>
                             <div class="select_arrow"></div>
                         </div>
