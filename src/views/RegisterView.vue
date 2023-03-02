@@ -34,8 +34,10 @@
                         <div class="input_field select_option">
                             <select>
                                 <option>Select a country</option>
-                                <option>Option 1</option>
-                                <option>Option 2</option>
+                                <option>Thai</option>
+                                <option>China</option>
+                                <option>America</option>
+                                <option>England</option>
                             </select>
                             <div class="select_arrow"></div>
                         </div>
