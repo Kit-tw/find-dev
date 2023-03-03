@@ -12,7 +12,13 @@ export default createStore({
     ProfileFirstname: null,
     ProfileLastname: null,
     ProfileId: null,
-    ProfileInitials: null
+    ProfileInitials: null,
+    PostHTML: "",
+    posttitle:"",
+    postsalary:"",
+    posttype:"",
+    posteducation:"",
+    postsalary:0
   },
   getters: {
   },
@@ -32,9 +38,22 @@ export default createStore({
     ChangeFirstname(state,payload){
       state.ProfileFirstname = payload
     },
-    ChangeLastname(state,payload){
-      state.ProfileLastname = payload
+    newPostHTML(state,payload){
+      state.PostHTML = payload
+      console.log(state.PostHTML)
     },
+    Uploadpostsalary(state,payload){
+      state.postsalary = payload
+    },
+    Uploadposttitle(state,payload){
+      state.posttitle = payload
+    },
+    Uploadposttype(state,payload){
+      state.posttype = payload
+    },
+    UploadpostEducation(state,payload){
+      state.posteducation = payload
+    }
   },
   actions: {
     async logout({ commit }) {
