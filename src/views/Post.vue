@@ -1,11 +1,8 @@
 <template>
-  <main class="home">
-
-  </main>
+  <h2>test</h2>
 </template>
 
 <script>
-
 export default {
 
 }

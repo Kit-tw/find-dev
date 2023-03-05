@@ -12,13 +12,16 @@ export default createStore({
     ProfileFirstname: null,
     ProfileLastname: null,
     ProfileId: null,
-    ProfileInitials: null,
     PostHTML: "",
     posttitle:"",
     postsalary:"",
     posttype:"",
     posteducation:"",
-    postsalary:0
+    postsalary:0,
+    PostPhotoName: "",
+    PostPhotoFileURL: null,
+    PostPhotoPreview: null,
+    editPost: null,
   },
   getters: {
   },
@@ -40,7 +43,6 @@ export default createStore({
     },
     newPostHTML(state,payload){
       state.PostHTML = payload
-      console.log(state.PostHTML)
     },
     Uploadpostsalary(state,payload){
       state.postsalary = payload
@@ -53,34 +55,24 @@ export default createStore({
     },
     UploadpostEducation(state,payload){
       state.posteducation = payload
-    }
+    }, 
+    fileNameChange(state, payload) {
+      state.PostPhotoName = payload;
+    },
+    createFileURL(state, payload) {
+      state.PostPhotoFileURL = payload;
+    },
+    openPhotoPreview(state) {
+      state.PostPhotoPreview = !state.PostPhotoPreview;
+    },
+    toggleEditPost(state, payload) {
+      state.editPost = payload;
+    },
   },
   actions: {
-    async logout({ commit }) {
-      console.log(auth.currentUser.email + "  has signout")
-      await signOut(auth)
-
-      commit('CLEAR_USER')
-      router.push('/LoginForm')
-    },
-    // fetchUser({ commit }) {
-    //   auth.onAuthStateChanged(async user => {
-    //     if (user === null) {
-    //       commit('CLEAR_USER')
-    //     } else {
-    //       commit('SET_USER', user)
-    //       if (router.isReady() && router.currentRoute.value.path === '/Login' || router.currentRoute.value.path === '/Register') {
-    //         router.push('/')
-    //       }
-    //     }
-
-    //   })
-    // },
     async getcurrentUser({ commit }) {
       const dbResult = await getDoc(doc(db, "user", auth.currentUser.uid));
       commit('SetProfileInfo', dbResult)
-      // commit("SetProfileInit");
-      console.log(dbResult.data())
     },
     async updateUserSetting({commit,state}){
       const dbResult = await updateDoc(doc(db,"user", auth.currentUser.uid),{

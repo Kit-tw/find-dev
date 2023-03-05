@@ -26,7 +26,6 @@ export default {
       
       if(user){
         this.$store.dispatch('getcurrentUser')
-        console.log(this.$store.state.ProfileFirstname)
       }
     })
   },
