@@ -2,53 +2,52 @@
     <div class="form_wrapper">
         <div class="form_container">
             <div class="title_container">
+                <Loading v-show="loading" />
                 <h2>สมัครสมาชิกสำหรับองค์กร</h2>
             </div>
             <div class="row clearfix">
                 <div class="">
+                    <div class="row clearfix">
+                        <div class="col_half"> <router-link class="button-6"
+                                :to="{ name: 'RegisterSeeker' }">สมัครเป็นผู้หางาน</router-link></div>
+
+                        <div class="col_half"><router-link class="button-6"
+                                :to="{ name: 'RegisterOrganize' }">สมัครเป็นองค์กร</router-link></div>
+                    </div>
                     <form @submit.prevent="register">
+
+                        <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-user" /></span>
+                            <input type="text" name="name" placeholder="ชื่อองค์กร" v-model="name" />
+
+                        </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-envelope" /></span>
                             <input type="email" name="email" placeholder="อีเมล" v-model="email" />
                         </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-lock" /></span>
                             <input type="password" name="password" placeholder="รหัสผ่าน" v-model="password" />
                         </div>
-                        <div class="row clearfix">
-                            <div class="col_half">
-                                <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-user" /></span>
-                                    <input type="text" name="name" placeholder="ชื่อ" v-model="firstname" />
-                                </div>
-                            </div>
-                            <div class="col_half">
-                                <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-user" /></span>
-                                    <input type="text" name="name" placeholder="นามสกุล" v-model="lastname" />
-                                </div>
-                            </div>
+                        <div class="input_field"> <span><font-awesome-icon class="icon"
+                                    icon="fa-solid fa-location-dot" /></span>
+                            <input type="text" name="location" placeholder="ที่อยู่" v-model="location" />
                         </div>
-                        <div class="input_field radio_option">
-                            <input type="radio" name="radiogroup1" id="rd1">
-                            <label for="rd1">ชาย</label>
-                            <input type="radio" name="radiogroup1" id="rd2">
-                            <label for="rd2">หญิง</label>
+                        <div class="input_field"> <span><font-awesome-icon class="icon"
+                                    icon="fa-solid fa-circle-info" /></span>
+                            <input type="text" name="description" placeholder="รายละเอียดเกี่ยวกับองค์กร"
+                                v-model="description" />
                         </div>
-                        <div class="input_field select_option">
-                            <select>
-                                <option>Select a country</option>
-                                <option>Thai</option>
-                                <option>China</option>
-                                <option>Thai</option>
-                                <option>China</option>
-                                <option>Thai</option>
-                                <option>China</option>
-                                <option>Thai</option>
-                                <option>China</option>
-                    
-                            </select>
-                            <div class="select_arrow"></div>
+                        <div class="input_field"> <label for="profile" class="bn3">อัพโหลดรูปองค์กร</label>
+                            <input type="file" ref="profile" id="profile" @change="fileChangeprofile"
+                                accept=".png, .jpg, ,jpeg" />
                         </div>
-                        <div class="text_field"><p>มีบัญชีอยู่แล้ว
-                            <router-link class="link" :to="{name : 'LoginForm'}"> เข้าสู่ระบบ</router-link>
-                        </p></div>
+                        <div class="input_field"> <label for="resume" class="bn3">เอกสารยืนยันองค์กร</label>
+                            <input type="file" ref="document" id="resume" @change="fileChangedocument"
+                                accept=".png, .jpg, ,jpeg" />
+                        </div>
+                        <div class="text_field">
+                            <p>มีบัญชีอยู่แล้ว
+                                <router-link class="link" :to="{ name: 'LoginForm' }"> เข้าสู่ระบบ</router-link>
+                            </p>
+                        </div>
                         <input class="button" type="submit" value="สมัครสมาชิก" />
                         <div v-show="error" class="error">{{ this.errorMsg }}</div>
                     </form>
@@ -60,49 +59,122 @@
 
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from '../firebase'
+import { doc, setDoc, serverTimestamp, collection } from "firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Loading from "../components/Loading";
 export default {
     name: "Register",
-    // components: {
-    //     email,
-    //     password,
-    //     user,
-    // },
+    components: {
+        Loading,
+
+    },
     data() {
         return {
             email: "",
             password: "",
-            firstname: "",
-            lastname: "",
+            name: "",
+            location: "",
+            description: "",
             error: null,
-            errorMsg: ""
+            errorMsg: "",
+            loading: null,
+            fileprofile: null,
+            downloadURLforprofile: "",
+            filedocument: null,
+            downloadURLfordocument: "",
         }
     },
     methods: {
+        fileChangeprofile() {
+            this.fileprofile = this.$refs.profile.files[0];
+            const fileName = this.fileprofile.name;
+            this.$store.commit("fileNameChange", fileName);
+            this.$store.commit("createFileURL", URL.createObjectURL(this.fileprofile));
+        },
+        fileChangedocument() {
+            this.filedocument = this.$refs.document.files[0];
+            const fileName = this.filedocument.name;
+            this.$store.commit("fileNameChange1", fileName);
+            this.$store.commit("createFileURL1", URL.createObjectURL(this.filedocument));
+        },
         async register() {
-            if (this.email !== "" && this.password !== "" && this.firstname !== "" && this.lastname !== "") {
-                this.error = false;
-                this.error = "";
-                createUserWithEmailAndPassword(auth, this.email, this.password).then(cred => {
-                    return setDoc(doc(db, "user", cred.user.uid), {
-                        firstname: this.firstname,
-                        lastname: this.lastname,
-                        email: this.email,
+            if (this.email !== "" && this.password !== "" && this.name !== "" && this.location !== "" && this.description !== "") {
+                if (this.fileprofile && this.filedocument) {
+                    this.loading = true;
+                    const stroge = getStorage()
+                    const storageRef = ref(stroge, `User/Organize/Profile/${this.$store.state.PostPhotoName}`);
+                    const uploadTask =  uploadBytesResumable(storageRef, this.fileprofile);
+                     uploadTask.on("state_changed", (snapshot) => { console.log(snapshot); },
+                        (err) => {
+                            console.log(err);
+                            this.loading = false;
+                        },
+                        async () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then(url => {
+                                this.downloadURLforprofile = url;
+                            })
+                        }
+                    );
+                    const storageRef1 = ref(stroge, `User/Organize/Document/${this.$store.state.PostPhotoName1}`);
+                    const uploadTask1 =  uploadBytesResumable(storageRef1, this.filedocument);
+                     uploadTask1.on("state_changed", (snapshot) => { console.log(snapshot); },
+                        (err) => {
+                            console.log(err);
+                            this.loading = false;
+                        },
+                        async () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then(url => {
+                                this.downloadURLfordocument = url;
+                            })
+                        }
+                    );
+                    await createUserWithEmailAndPassword(auth, this.email, this.password).then(cred => {
+                        return setDoc(doc(db, "user", cred.user.uid), {
+                            name: this.name,
+                            location: this.location,
+                            description: this.description,
+                            email: this.email,
+                            profileimage: this.downloadURLforprofile,
+                            doucmentimage: this.downloadURLfordocument
 
+                        });
+                    }).catch((error) => {
+                        switch (error.code) {
+                            case 'auth/email-already-in-use':
+                                alert("Email already in use")
+                                break
+                            case 'auth/invalid-email':
+                                alert("Invalid email")
+                                break
+                            case 'auth/operation-not-allowed':
+                                alert("Operation not allowed")
+                                break
+                            case 'auth/weak-password':
+                                alert("Weak password")
+                                break
+                            default:
+                                alert("Something went wrong")
+                        }
                     });
-                }).catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        // ..
-                    });
-                this.$router.push({ name: "Home" })
+                    this.loading = false;
+                    this.$router.push({ name: "Home" })
+                    return;
+                }
+                this.error = true;
+                this.errorMsg = "Please ensure you uploaded a cover photo!";
+                setTimeout(() => {
+                    this.error = false;
+                }, 5000);
                 return;
             }
             this.error = true;
-            this.errorMsg = "Please fill out all the field"
+            this.errorMsg = "Please fill all the field";
+            setTimeout(() => {
+                this.error = false;
+            }, 5000);
             return;
-        }
+        },
     }
 }
 </script>
@@ -115,7 +187,7 @@ $grey: #cccccc;
 
 
 body {
-    font-family: Verdana, Geneva, sans-serif;
+    // font-family: Verdana, Geneva, sans-serif;
     font-size: 14px;
     background: #f2f2f2;
 }
@@ -212,7 +284,9 @@ body {
 
         &[type="text"],
         &[type="email"],
-        &[type="password"] {
+        &[type="password"],
+        &[type="number"],
+        &[type="date"] {
             width: 100%;
             padding: 8px 10px 9px 35px;
             height: 35px;
@@ -422,17 +496,18 @@ body {
     }
 }
 
-.text_field{
+.text_field {
     position: relative;
     padding: 9px;
     font-size: 1.1em;
     font-weight: normal;
 
-    .link{
+    .link {
         color: #008CC9;
-        &:hover{
+
+        &:hover {
             color: #02425e;
-         }
+        }
     }
 }
 
@@ -604,4 +679,49 @@ body {
         padding-bottom: 20px;
     }
 }
-</style>
+
+.button-6 {
+    align-items: center;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+}
+
+.button-6:hover,
+.button-6:focus {
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.button-6:hover {
+    transform: translateY(-1px);
+}
+
+.button-6:active {
+    background-color: #F0F0F1;
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+    color: rgba(0, 0, 0, 0.65);
+    transform: translateY(0);
+}</style>

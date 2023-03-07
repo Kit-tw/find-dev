@@ -20,7 +20,6 @@ export default {
       navigation :null,
     }
   },created(){
-    this.checkRoute()
     auth.onAuthStateChanged((user) =>{
       this.$store.commit('updateUser',user)
       
@@ -28,10 +27,12 @@ export default {
         this.$store.dispatch('getcurrentUser')
       }
     })
+    this.checkRoute()
+    this.$store.dispatch('getPost')
   },
   methods:{
     checkRoute(){
-        if(this.$route.name ==="Login" ||this.$route.name ==="Register" || this.$route.name ==="RegisterForm" || this.$route.name ==="LoginForm"){
+        if(this.$route.name ==="RegisterSeeker" || this.$route.name ==="LoginForm" || this.$route.name ==="Registerorganize"){
           this.navigation =true
           return;
         }this.navigation = false

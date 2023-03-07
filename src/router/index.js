@@ -9,11 +9,6 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/RegisterForm',
-    name: 'RegisterForm',
-    component: () => import('../views/RegisterView.vue')
-  },
-  {
     path: '/LoginForm',
     name: 'LoginForm',
     component: () => import('../views/LoginView.vue')
@@ -29,9 +24,21 @@ const routes = [
     component: () => import('../views/CreateJob.vue')
   },
   {
-    path: '/Post',
-    name: 'Post',
-    component: () => import('../views/Post.vue')
+    path: '/ListJob',
+    name: 'ListJob',
+    component: () => import('../views/ListJob.vue')
+  }
+  ,
+  {
+    path: '/RegisterSeeker',
+    name: 'RegisterSeeker',
+    component: () => import('../views/Registerseeker.vue')
+  }
+  ,
+  {
+    path: '/RegisterOrganize',
+    name: 'RegisterOrganize',
+    component: () => import('../views/Registerorganize.vue')
   }
 ]
 

@@ -142,6 +142,7 @@ export default {
                          async () => {
                             getDownloadURL(uploadTask.snapshot.ref).then(url => {
                             const newDocRef = doc(collection(db, "post"))
+                            this.downloadURL = url;
                             setDoc(
                                 newDocRef,
                                 {
@@ -160,7 +161,7 @@ export default {
                             console.log("Document written with ID: ", newDocRef.id);
                             // await this.$store.dispatch("getPost");
                             this.loading = false;
-                            this.$router.push({ name: "Post"});
+                            this.$router.push({ name: "ListJob"});
                         })}
                     );
                     return;

@@ -1,22 +1,70 @@
 <template>
-  <div class="form_wrapper">
+    <div class="form_wrapper">
         <div class="form_container">
             <div class="title_container">
-                <h2>เข้าสู่ระบบ</h2>
+                <h2>สมัครสมาชิกสำหรับผู้หางาน</h2>
             </div>
             <div class="row clearfix">
                 <div class="">
-                    <form @submit.prevent="signIn">
+                    <div class="row clearfix">
+                        <div class="col_half"> <router-link class="button-6" :to="{ name: 'RegisterSeeker' }">สมัครเป็นผู้หางาน</router-link></div>
+                    
+                        <div class="col_half"><router-link class="button-6" :to="{ name: 'RegisterOrganize' }">สมัครเป็นองค์กร</router-link></div>
+                </div>
+                    <form @submit.prevent="register">
+                        <div class="row clearfix">
+                            <div class="col_half">
+                                <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-user" /></span>
+                                    <input type="text" name="name" placeholder="ชื่อ" v-model="firstname" />
+                                </div>
+                            </div>
+                            <div class="col_half">
+                                <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-user" /></span>
+                                    <input type="text" name="name" placeholder="นามสกุล" v-model="lastname" />
+                                </div>
+                            </div>
+                        </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-envelope" /></span>
                             <input type="email" name="email" placeholder="อีเมล" v-model="email" />
                         </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa fa-lock" /></span>
                             <input type="password" name="password" placeholder="รหัสผ่าน" v-model="password" />
                         </div>
-                        <div class="text_field"><p>ยังไม่มีบัญชี
-                            <router-link class="link" :to="{name : 'RegisterSeeker'}"> สมัครสมาชิก</router-link>
-                        </p></div>
-                        <input class="button" type="submit" value="เข้าสู่ระบบ" />
+                        <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa-solid fa-phone" /></span>
+                            <input type="text" name="phone" placeholder="เบอร์โทร" v-model="phone" />
+                        </div>
+                        <div class="input_field"> <span><font-awesome-icon class="icon"
+                                    icon="fa-solid fa-calendar-days" /></span>
+                            <input type="date" name="date" placeholder="เดือน/วัน/ปี เกิด" v-model="phone" />
+                        </div>
+                        <div class="input_field radio_option">
+                            <input type="radio" name="radiogroup1" id="rd1">
+                            <label for="rd1">ชาย</label>
+                            <input type="radio" name="radiogroup1" id="rd2">
+                            <label for="rd2">หญิง</label>
+                        </div>
+                        <div class="input_field select_option">
+                            <select>
+                                <option disabled value="">Choice Education</option>
+                                <option>มัธยมศึกษาตอนปลาย</option>
+                                <option>ปริญญาตรี</option>
+                                <option>ปริญญาโท</option>
+                                <option>ปริญญาเอก</option>
+
+                            </select>
+                        </div>
+                        <div class="input_field"> <label for="profile" class="bn3">อัพโหลดโปรไฟล์</label>
+                            <input type="file" ref="profile" id="profile" @change="fileChange" accept=".png, .jpg, ,jpeg" />
+                        </div>
+                        <div class="input_field"> <label for="resume" class="bn3">อัพโหลดเรซูเม่</label>
+                            <input type="file" ref="document" id="resume" @change="fileChange" accept=".png, .jpg, ,jpeg" />
+                        </div>
+                        <div class="text_field">
+                            <p>มีบัญชีอยู่แล้ว
+                                <router-link class="link" :to="{ name: 'LoginForm' }"> เข้าสู่ระบบ</router-link>
+                            </p>
+                        </div>
+                        <input class="button" type="submit" value="สมัครสมาชิก" />
                         <div v-show="error" class="error">{{ this.errorMsg }}</div>
                     </form>
                 </div>
@@ -26,35 +74,9 @@
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from '../firebase'
 export default {
-    name: "Login",
-    // components: {
-    //     email,
-    //     password,
-    // },
-    data() {
-        return {
-            email: "",
-            password: "",
-            error: null,
-            errorMsg: ""
-        }
-    },methods:{
-        async signIn(){
-        await signInWithEmailAndPassword(auth, this.email, this.password).then((data) =>{
-            this.$router.push({name : "Home"})
-            this.error =false;
-            this.errorMsg ="";
-        }).catch((err) =>{
-            this.err = true;
-            this.errorMsg = err.message;
-        })
-        }
-    }
-}
 
+}
 </script>
 
 <style lang="scss">
@@ -65,7 +87,7 @@ $grey: #cccccc;
 
 
 body {
-    font-family: Verdana, Geneva, sans-serif;
+    // font-family: Verdana, Geneva, sans-serif;
     font-size: 14px;
     background: #f2f2f2;
 }
@@ -133,8 +155,6 @@ body {
     .input_field {
         position: relative;
         margin-bottom: 20px;
-        -webkit-animation: bounce 0.6s ease-out;
-        animation: bounce 0.6s ease-out;
 
         >span {
             position: absolute;
@@ -164,17 +184,15 @@ body {
 
         &[type="text"],
         &[type="email"],
-        &[type="password"] {
+        &[type="password"],
+        &[type="number"],
+        &[type="date"] {
             width: 100%;
             padding: 8px 10px 9px 35px;
             height: 35px;
             border: 1px solid $grey;
             box-sizing: border-box;
             outline: none;
-            -webkit-transition: all 0.30s ease-in-out;
-            -moz-transition: all 0.30s ease-in-out;
-            -ms-transition: all 0.30s ease-in-out;
-            transition: all 0.30s ease-in-out;
         }
 
         &[type="text"]:hover,
@@ -204,10 +222,6 @@ body {
             color: #fff;
             font-size: 1.1em;
             margin-bottom: 10px;
-            -webkit-transition: all 0.30s ease-in-out;
-            -moz-transition: all 0.30s ease-in-out;
-            -ms-transition: all 0.30s ease-in-out;
-            transition: all 0.30s ease-in-out;
 
             &:hover {
                 background: darken($aquamarine, 7%);
@@ -382,17 +396,18 @@ body {
     }
 }
 
-.text_field{
+.text_field {
     position: relative;
     padding: 9px;
     font-size: 1.1em;
     font-weight: normal;
 
-    .link{
+    .link {
         color: #008CC9;
-        &:hover{
+
+        &:hover {
             color: #02425e;
-         }
+        }
     }
 }
 
@@ -564,4 +579,49 @@ body {
         padding-bottom: 20px;
     }
 }
-</style>
+
+.button-6 {
+    align-items: center;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+}
+
+.button-6:hover,
+.button-6:focus {
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.button-6:hover {
+    transform: translateY(-1px);
+}
+
+.button-6:active {
+    background-color: #F0F0F1;
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+    color: rgba(0, 0, 0, 0.65);
+    transform: translateY(0);
+}</style>

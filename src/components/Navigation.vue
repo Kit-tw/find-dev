@@ -7,9 +7,9 @@
             <div class="class nav-links">
                 <ul>
                     <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
-                    <router-link class="link" to="#">find job</router-link>
-                    <router-link class="link" :to="{name: 'CreateJob'}">CreateJob</router-link>
-                    <router-link  v-if="user" class="link" :to="{ name: 'Account' }">Account</router-link>
+                    <router-link class="link" :to="{name: 'ListJob'}">find job</router-link>
+                    <router-link v-if="user" class="link" :to="{name: 'CreateJob'}">CreateJob</router-link>
+                    <router-link v-if="user" class="link" :to="{ name: 'Account' }">Account</router-link>
                     <router-link v-if ="!user" class="link" :to="{ name: 'LoginForm' }">Login/Register</router-link>
                     <a v-if= "user" class="link"  @click="signout">Logout</a>
                 </ul>
