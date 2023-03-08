@@ -124,7 +124,7 @@ export default {
                             this.loading = false;
                         },
                         async () => {
-                            getDownloadURL(uploadTask.snapshot.ref).then(url => {
+                            getDownloadURL(uploadTask1.snapshot.ref).then(url => {
                                 this.downloadURLfordocument = url;
                             })
                         }

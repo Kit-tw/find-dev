@@ -45,11 +45,11 @@ export default createStore({
         state.ProfileId = doc.id,
         state.ProfileEmail = doc.data().email,
         state.ProfileFirstname = doc.data().name,
-        // state.ProfileLastname = doc.data().lastname
+        state.ProfileLastname = doc.data().lastname,
         state.ProfileLocation = doc.data().location,
         state.ProfileDescription = doc.data().description,
         state.ProfileImage = doc.data().profileimage,
-        state.ProfileDocument = doc.data().documentimage
+        state.ProfileDocument = doc.data().doucmentimage
     },
     updateUser(state, payload) {
       state.user = payload
@@ -90,6 +90,12 @@ export default createStore({
     toggleEditPost(state, payload) {
       state.editPost = payload;
     },
+    ChangeDescription(state,payload){
+      state.ProfileDocument = payload
+    },
+    ChangeLocation(state,payload){
+      state.ProfileLocation = payload
+    }
   },
   actions: {
     async getcurrentUser({ commit }) {
@@ -98,8 +104,10 @@ export default createStore({
     },
     async updateUserSetting({commit,state}){
       const dbResult = await updateDoc(doc(db,"user", auth.currentUser.uid),{
-        firstname : state.ProfileFirstname,
-        lastname : state.ProfileLastname
+        name : state.ProfileFirstname,
+        // lastname : state.ProfileLastname
+        description:state.ProfileDescription,
+        location:state.ProfileLocation
       })
     },
     async getPost({state}){
@@ -124,18 +132,20 @@ export default createStore({
       // state.postLoaded = true;
       // console.log(state.Post)
       onSnapshot(PostRef, (PostSnapshot) => {
-        PostSnapshot.forEach((doc) =>{
-          if(!state.Post.some((post) => post.PostID === doc.id)){
+        PostSnapshot.forEach((snap) =>{
+          if(!state.Post.some((post) => post.PostID === snap.id)){
+            // const dbResult = getDoc(doc(db, "user", snap.data().profileId)).then()
+            // console.log(dbResult)
             const data ={
-              PostID:doc.data().PostID,
-              PostHTML:doc.data().PostHTML,
-              PostCoverPhoto:doc.data().PostCoverPhoto,
-              posteducation:doc.data().posteducation,
-              postsalary:doc.data().postsalary,
-              posttype:doc.data().posttype,
-              date:doc.data().date,
-              PostCoverPhotoName:doc.data().PostCoverPhotoName,
-              posttitle:doc.data().posttitle,
+              PostID:snap.data().PostID,
+              PostHTML:snap.data().PostHTML,
+              PostCoverPhoto:snap.data().PostCoverPhoto,
+              posteducation:snap.data().posteducation,
+              postsalary:snap.data().postsalary,
+              posttype:snap.data().posttype,
+              date:snap.data().date,
+              PostCoverPhotoName:snap.data().PostCoverPhotoName,
+              posttitle:snap.data().posttitle,
             }
             state.Post.push(data);
           }
