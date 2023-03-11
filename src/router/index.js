@@ -63,6 +63,7 @@ const routes = [
     name: 'AdminOrganize',
     component: () => import('../views/AdminOrganize.vue')
   }
+
 ]
 
 const router = createRouter({

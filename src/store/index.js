@@ -35,9 +35,11 @@ export default createStore({
     editPost: null,
     Post:[],
     PostNotification:[],
+    OrganizeVerify:[],
     postLoaded:null,
     PostDetailType:null,
     PostDetailEducation:null,
+    verify:null,
 
   },
   getters: {
@@ -52,6 +54,10 @@ export default createStore({
     },
     getPostNotification(state){
       return state.PostNotification
+    }
+    ,
+    getOrganizeVerify(state){
+      return state.OrganizeVerify
     }
   },
   mutations: {
@@ -68,6 +74,7 @@ export default createStore({
         state.ProfileImage = doc.data().profileimage,
         state.ProfileDocument = doc.data().doucmentimage
         state.Role = doc.data().role
+        state.verify = doc.data().verify
     },
     SetUserProfileInfo(state,doc){
         state.ProfileId = doc.id,
@@ -131,6 +138,9 @@ export default createStore({
       state.postvacancy = payload
     },ChangeLastname(state,payload){
       state.ProfileLastname = payload
+    },
+    UploadImageDocument(state,payload){
+      
     }
   },
   actions: {
@@ -267,7 +277,30 @@ export default createStore({
           console.log(state.PostNotification)
         });
       }))
-    }
+    },
+    async getOrganizeVerify({state}){
+      const OrganizeRef = query(collection(db, "user"), where("verify", "==", 0));
+      onSnapshot(OrganizeRef,((OrganizeDoc =>{
+        OrganizeDoc.forEach((information) => {
+          if(!state.OrganizeVerify.some((snap) => snap.profileID === information.id)){
+            const postIDRef = (doc(db,"user",information.data().profileID))
+            getDoc(postIDRef).then((organize) =>{
+                const data ={
+                profileID:organize.data().profileID,
+                name:organize.data().name,
+                profileimage:organize.data().profileimage,
+                documentimage:organize.data().doucmentimage
+                }
+                state.OrganizeVerify.push(data)
+             
+            })
+  
+          }
+          console.log(state.OrganizeVerify)
+        });
+      })))
+
+    },
   },
   modules: {
   }

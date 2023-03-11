@@ -132,13 +132,15 @@ export default {
                     );
                     await createUserWithEmailAndPassword(auth, this.email, this.password).then(cred => {
                         return setDoc(doc(db, "user", cred.user.uid), {
+                            profileID:cred.user.uid,
                             name: this.name,
                             location: this.location,
                             description: this.description,
                             email: this.email,
                             profileimage: this.downloadURLforprofile,
                             doucmentimage: this.downloadURLfordocument,
-                            role:this.role
+                            role:this.role,
+                            verify:0,
 
                         });
                     }).catch((error) => {

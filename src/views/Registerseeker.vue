@@ -154,6 +154,7 @@ export default {
                     );
                     await createUserWithEmailAndPassword(auth, this.email, this.password).then(cred => {
                         return setDoc(doc(db, "user", cred.user.uid), {
+                            profileID:cred.user.uid,
                             firstname: this.firstname,
                             lastname:this.lastname,
                             phone: this.phone,
