@@ -64,7 +64,7 @@ import { doc, setDoc, serverTimestamp, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Loading from "../components/Loading";
 export default {
-    name: "Register",
+    name: "RegisterOrganize",
     components: {
         Loading,
 
@@ -83,6 +83,7 @@ export default {
             downloadURLforprofile: "",
             filedocument: null,
             downloadURLfordocument: "",
+            role:"organize",
         }
     },
     methods: {
@@ -136,7 +137,8 @@ export default {
                             description: this.description,
                             email: this.email,
                             profileimage: this.downloadURLforprofile,
-                            doucmentimage: this.downloadURLfordocument
+                            doucmentimage: this.downloadURLfordocument,
+                            role:this.role
 
                         });
                     }).catch((error) => {
@@ -162,7 +164,7 @@ export default {
                     return;
                 }
                 this.error = true;
-                this.errorMsg = "Please ensure you uploaded a cover photo!";
+                this.errorMsg = "Please ensure you uploaded photo!";
                 setTimeout(() => {
                     this.error = false;
                 }, 5000);

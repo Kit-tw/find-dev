@@ -2,6 +2,7 @@
     <div class="form_wrapper">
         <div class="form_container">
             <div class="title_container">
+                <Loading v-show="loading" />
                 <h2>สมัครสมาชิกสำหรับผู้หางาน</h2>
             </div>
             <div class="row clearfix">
@@ -33,31 +34,33 @@
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa-solid fa-phone" /></span>
                             <input type="text" name="phone" placeholder="เบอร์โทร" v-model="phone" />
                         </div>
+                        <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa-solid fa-cake-candles" /></span>
+                            <input type="date" name="date" placeholder="เดือน/วัน/ปี เกิด" v-model="date" />
+                        </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon"
-                                    icon="fa-solid fa-calendar-days" /></span>
-                            <input type="date" name="date" placeholder="เดือน/วัน/ปี เกิด" v-model="phone" />
+                                    icon="fa-solid fa-circle-info" /></span>
+                            <input type="text" name="description" placeholder="รายละเอียดเกี่ยวกับตัวเอง"
+                                v-model="description" />
                         </div>
                         <div class="input_field radio_option">
-                            <input type="radio" name="radiogroup1" id="rd1">
+                            <input type="radio" name="radiogroup1" id="rd1" value="ชาย" v-model="gender">
                             <label for="rd1">ชาย</label>
-                            <input type="radio" name="radiogroup1" id="rd2">
+                            <input type="radio" name="radiogroup1" id="rd2" value="หญิง" v-model="gender">
                             <label for="rd2">หญิง</label>
                         </div>
+                        
                         <div class="input_field select_option">
-                            <select>
-                                <option disabled value="">Choice Education</option>
-                                <option>มัธยมศึกษาตอนปลาย</option>
-                                <option>ปริญญาตรี</option>
-                                <option>ปริญญาโท</option>
-                                <option>ปริญญาเอก</option>
-
-                            </select>
+                            <select class="form-select" aria-label="Default select example" v-model="Education">
+                        <option v-for="(Education,index) in getPostDetailEducation" :key="index.id" :value="Education" >{{ Education }}</option>
+                    </select>
                         </div>
                         <div class="input_field"> <label for="profile" class="bn3">อัพโหลดโปรไฟล์</label>
-                            <input type="file" ref="profile" id="profile" @change="fileChange" accept=".png, .jpg, ,jpeg" />
+                            <input type="file" ref="profile" id="profile" @change="fileChangeprofile"
+                                accept=".png, .jpg, ,jpeg" />
                         </div>
                         <div class="input_field"> <label for="resume" class="bn3">อัพโหลดเรซูเม่</label>
-                            <input type="file" ref="document" id="resume" @change="fileChange" accept=".png, .jpg, ,jpeg" />
+                            <input type="file" ref="document" id="resume" @change="fileChangedocument"
+                                accept=".png, .jpg, ,jpeg" />
                         </div>
                         <div class="text_field">
                             <p>มีบัญชีอยู่แล้ว
@@ -74,8 +77,149 @@
 </template>
 
 <script>
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from '../firebase'
+import { doc, setDoc, serverTimestamp, collection } from "firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Loading from "../components/Loading";
 export default {
+    name: "RegisterSeeker",
+    components: {
+        Loading,
 
+    },
+    data() {
+        return {
+            email: "",
+            password: "",
+            firstname: "",
+            lastname: "",
+            phone: "",
+            date:"",
+            gender:"",
+            description:"",
+            role:"user",
+            error: null,
+            errorMsg: "",
+            loading: null,
+            fileprofile: null,
+            downloadURLforprofile: "",
+            filedocument: null,
+            downloadURLfordocument: "",
+        }
+    },
+    methods: {
+        fileChangeprofile() {
+            this.fileprofile = this.$refs.profile.files[0];
+            const fileName = this.fileprofile.name;
+            this.$store.commit("fileNameChange", fileName);
+            this.$store.commit("createFileURL", URL.createObjectURL(this.fileprofile));
+        },
+        fileChangedocument() {
+            this.filedocument = this.$refs.document.files[0];
+            const fileName = this.filedocument.name;
+            this.$store.commit("fileNameChange1", fileName);
+            this.$store.commit("createFileURL1", URL.createObjectURL(this.filedocument));
+        },
+        async register() {
+            if (this.email !== "" && this.password !== "" && this.lastname !== "" && this.firstname !== "" && this.phone !== "" && this.phone.length == 10 && this.date !=="") {
+                if (this.fileprofile && this.filedocument) {
+                    this.loading = true;
+                    const stroge = getStorage()
+                    const storageRef = ref(stroge, `User/Seeker/Profile/${this.$store.state.PostPhotoName}`);
+                    const uploadTask =  uploadBytesResumable(storageRef, this.fileprofile);
+                     uploadTask.on("state_changed", (snapshot) => { console.log(snapshot); },
+                        (err) => {
+                            console.log(err);
+                            this.loading = false;
+                        },
+                        async () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then(url => {
+                                this.downloadURLforprofile = url;
+                            })
+                        }
+                    );
+                    const storageRef1 = ref(stroge, `User/Seeker/Document/${this.$store.state.PostPhotoName1}`);
+                    const uploadTask1 =  uploadBytesResumable(storageRef1, this.filedocument);
+                     uploadTask1.on("state_changed", (snapshot) => { console.log(snapshot); },
+                        (err) => {
+                            console.log(err);
+                            this.loading = false;
+                        },
+                        async () => {
+                            getDownloadURL(uploadTask1.snapshot.ref).then(url => {
+                                this.downloadURLfordocument = url;
+                            })
+                        }
+                    );
+                    await createUserWithEmailAndPassword(auth, this.email, this.password).then(cred => {
+                        return setDoc(doc(db, "user", cred.user.uid), {
+                            firstname: this.firstname,
+                            lastname:this.lastname,
+                            phone: this.phone,
+                            date: this.date,
+                            email: this.email,
+                            gender:this.gender,
+                            role:this.role,
+                            description:this.description,
+                            education:this.Education,
+                            profileimage: this.downloadURLforprofile,
+                            doucmentimage: this.downloadURLfordocument
+
+                        });
+                    }).catch((error) => {
+                        switch (error.code) {
+                            case 'auth/email-already-in-use':
+                                alert("Email already in use")
+                                break
+                            case 'auth/invalid-email':
+                                alert("Invalid email")
+                                break
+                            case 'auth/operation-not-allowed':
+                                alert("Operation not allowed")
+                                break
+                            case 'auth/weak-password':
+                                alert("Weak password")
+                                break
+                            default:
+                                alert("Something went wrong")
+                        }
+                    });
+                    this.loading = false;
+                    this.$router.push({ name: "Home" })
+                    return;
+                }
+                this.error = true;
+                this.errorMsg = "Please ensure you uploaded a photo!";
+                setTimeout(() => {
+                    this.error = false;
+                }, 5000);
+                return;
+            }
+            this.error = true;
+            this.errorMsg = "Please fill all the field Check again";
+            setTimeout(() => {
+                this.error = false;
+            }, 5000);
+            return;
+        },
+    },
+    computed:{
+        
+        posteducation: {
+            get() {
+                return this.$store.state.posteducation;
+            }, set(payload) {
+                this.$store.commit("UploadpostEducation", payload);
+            }
+    },
+    getPostDetailEducation(){
+      return this.$store.state.PostDetailEducation
+    }
+},
+created(){
+        this.$store.dispatch('getPostDetail')
+    },
 }
 </script>
 

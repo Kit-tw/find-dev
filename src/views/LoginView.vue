@@ -50,6 +50,7 @@ export default {
         }).catch((err) =>{
             this.err = true;
             this.errorMsg = err.message;
+            alert(errorMsg)
         })
         }
     }

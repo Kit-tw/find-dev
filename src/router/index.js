@@ -40,6 +40,29 @@ const routes = [
     name: 'RegisterOrganize',
     component: () => import('../views/Registerorganize.vue')
   }
+  ,
+  {
+    path: '/job-detail/:postid',
+    name: 'DetailJob',
+    component: () => import('../views/DetailJob.vue')
+  },
+  {
+    path: '/Notification',
+    name: 'Notification',
+    component: () => import('../views/Notification.vue')
+  }
+  ,
+  {
+    path: '/Detail-notification:notificationID',
+    name: 'DetailNotification',
+    component: () => import('../views/DetailNotification.vue')
+  }
+  ,
+  {
+    path: '/AdminOrganize',
+    name: 'AdminOrganize',
+    component: () => import('../views/AdminOrganize.vue')
+  }
 ]
 
 const router = createRouter({

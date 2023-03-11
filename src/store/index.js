@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import router from '../router'
 import { auth, db } from '../firebase'
-import { doc, getDoc,updateDoc,query,orderBy,collection,getDocs,onSnapshot} from "firebase/firestore";
+import { doc, getDoc,updateDoc,query,orderBy,collection,getDocs,onSnapshot,where} from "firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 export default createStore({
@@ -14,14 +14,19 @@ export default createStore({
     ProfileId: null,
     ProfileLocation:null,
     ProfileDescription:null,
+    ProfilePhone:null,
+    ProfileGender:null,
+    ProfileBirthDate:null,
     ProfileImage:null,
     ProfileDocument:null,
+    Role:null,
     PostHTML: "",
     posttitle:"",
     postsalary:"",
     posttype:"",
     posteducation:"",
     postsalary:0,
+    postvacancy:"",
     PostPhotoName: "",
     PostPhotoFileURL: null,
     PostPhotoName1: "",
@@ -29,19 +34,31 @@ export default createStore({
     PostPhotoPreview: null,
     editPost: null,
     Post:[],
+    PostNotification:[],
     postLoaded:null,
+    PostDetailType:null,
+    PostDetailEducation:null,
 
   },
   getters: {
     getListpost(state){
       return state.Post
+    },
+    getPostDetailType(state){
+      return state.PostDetailType
+    },
+    PostDetailEducation(state){
+      return state.PostDetailEducation
+    },
+    getPostNotification(state){
+      return state.PostNotification
     }
   },
   mutations: {
     CLEAR_USER(state) {
       state.user = null;
     },
-    SetProfileInfo(state, doc) {
+    SetOrganizeProfileInfo(state, doc) {
         state.ProfileId = doc.id,
         state.ProfileEmail = doc.data().email,
         state.ProfileFirstname = doc.data().name,
@@ -50,6 +67,20 @@ export default createStore({
         state.ProfileDescription = doc.data().description,
         state.ProfileImage = doc.data().profileimage,
         state.ProfileDocument = doc.data().doucmentimage
+        state.Role = doc.data().role
+    },
+    SetUserProfileInfo(state,doc){
+        state.ProfileId = doc.id,
+        state.ProfileEmail = doc.data().email,
+        state.ProfileFirstname = doc.data().firstname,
+        state.ProfileLastname = doc.data().lastname,
+        state.ProfilePhone = doc.data().phone,
+        state.ProfileGender = doc.data().gender,
+        state.ProfileBirthDate = doc.data().date,
+        state.ProfileImage = doc.data().profileimage,
+        state.ProfileDocument = doc.data().doucmentimage,
+        state.ProfileDescription = doc.data().description,
+        state.Role = doc.data().role
     },
     updateUser(state, payload) {
       state.user = payload
@@ -91,18 +122,28 @@ export default createStore({
       state.editPost = payload;
     },
     ChangeDescription(state,payload){
-      state.ProfileDocument = payload
+      state.ProfileDescription = payload
     },
     ChangeLocation(state,payload){
       state.ProfileLocation = payload
+    },
+    UploadVacancy(state,payload){
+      state.postvacancy = payload
+    },ChangeLastname(state,payload){
+      state.ProfileLastname = payload
     }
   },
   actions: {
     async getcurrentUser({ commit }) {
       const dbResult = await getDoc(doc(db, "user", auth.currentUser.uid));
-      commit('SetProfileInfo', dbResult)
+      if(dbResult.data().role == "user"){
+        commit('SetUserProfileInfo', dbResult)
+        return;
+      }
+      commit('SetOrganizeProfileInfo', dbResult)
+      return;
     },
-    async updateUserSetting({commit,state}){
+    async updateOrganizeSetting({commit,state}){
       const dbResult = await updateDoc(doc(db,"user", auth.currentUser.uid),{
         name : state.ProfileFirstname,
         // lastname : state.ProfileLastname
@@ -110,49 +151,123 @@ export default createStore({
         location:state.ProfileLocation
       })
     },
+    async updateUserSetting({commit,state}){
+      const dbResult = await updateDoc(doc(db,"user", auth.currentUser.uid),{
+        name : state.ProfileFirstname,
+        lastname : state.ProfileLastname,
+        description:state.ProfileDescription,
+      })
+    },
     async getPost({state}){
       const PostRef = query(collection(db, 'post'), orderBy("date","desc"))
-      // const PostSnapshot = await getDocs(PostRef);
-      // PostSnapshot.forEach((doc) =>{
-      //   if(!state.Post.some((post) => post.PostID === doc.id)){
-      //     const data ={
-      //       PostID:doc.data().PostID,
-      //       PostHTML:doc.data().PostHTML,
-      //       PostCoverPhoto:doc.data().PostCoverPhoto,
-      //       posteducation:doc.data().posteducation,
-      //       postsalary:doc.data().postsalary,
-      //       posttype:doc.data().posttype,
-      //       date:doc.data().date,
-      //       PostCoverPhotoName:doc.data().PostCoverPhotoName,
-      //       posttitle:doc.data().posttitle,
-      //     }
-      //     state.Post.push(data);
-      //   }
-      // })
-      // state.postLoaded = true;
-      // console.log(state.Post)
       onSnapshot(PostRef, (PostSnapshot) => {
         PostSnapshot.forEach((snap) =>{
           if(!state.Post.some((post) => post.PostID === snap.id)){
-            // const dbResult = getDoc(doc(db, "user", snap.data().profileId)).then()
-            // console.log(dbResult)
-            const data ={
-              PostID:snap.data().PostID,
-              PostHTML:snap.data().PostHTML,
-              PostCoverPhoto:snap.data().PostCoverPhoto,
-              posteducation:snap.data().posteducation,
-              postsalary:snap.data().postsalary,
-              posttype:snap.data().posttype,
-              date:snap.data().date,
-              PostCoverPhotoName:snap.data().PostCoverPhotoName,
-              posttitle:snap.data().posttitle,
+            const userRef = doc(db, "user", snap.data().profileId)
+            getDoc(userRef).then((object) =>{
+              const data ={
+                PostID:snap.data().PostID,
+                PostHTML:snap.data().PostHTML,
+                PostCoverPhoto:snap.data().PostCoverPhoto,
+                posteducation:snap.data().posteducation,
+                postsalary:snap.data().postsalary,
+                posttype:snap.data().posttype,
+                date:snap.data().date,
+                PostCoverPhotoName:snap.data().PostCoverPhotoName,
+                posttitle:snap.data().posttitle,
+                postProfileEmail:object.data().email,
+                postProfileDescription:object.data().description,
+                postProfilelocation:object.data().location,
+                postProfilename:object.data().name,
+                postProfileImage:object.data().profileimage,
+                postvacancy:snap.data().postvacancy,
+                postProfileID:snap.data().profileId
+              }
+              state.Post.push(data);
             }
-            state.Post.push(data);
+            )
           }
         })
     })
     state.postLoaded = true;
-    console.log(state.Post)}
+    // console.log(state.Post)
+  },
+  getPostDetail({state}){
+    const PostRef = getDoc(doc(db, "postDetail","GetDetail")).then((object) =>{
+
+        state.PostDetailEducation = object.data().Education,
+        state.PostDetailType = object.data().Type
+    })
+  
+  // console.log(state.Post)
+},
+    async getPostNotifacionUser({state}){
+      const postnotificaionRef = query(collection(db, "postnotification"), where("user", "==", auth.currentUser.uid));
+      onSnapshot(postnotificaionRef,((postnotiDoc =>{
+        postnotiDoc.forEach((notification) => {
+          if(!state.PostNotification.some((snap) => snap.postnotificationID === notification.id)){
+            const postIDRef = (doc(db,"post",notification.data().postID))
+            getDoc(postIDRef).then((post) =>{
+              const creatorRef = (doc(db,"user",notification.data().postcreatorID))
+              getDoc(creatorRef).then((creator) =>{
+                const data ={
+                  postnotificationID:notification.data().postnotiID,
+                  posttitle:post.data().posttitle,
+                  posttype:post.data().posttype,
+                  postsalary:post.data().postsalary,
+                  posteducation:post.data().posteducation,
+                  status:notification.data().status,
+                  postcreatorname:creator.data().name,
+                  postcreatorImage:creator.data().profileimage,
+                  postdate:notification.data().date,
+                }
+                state.PostNotification.push(data)
+              })
+            })
+  
+          }
+          console.log(state.PostNotification)
+        });
+      })))
+
+    },
+    async getPostNotifacionOrganize({state}){
+      const postnotificaionRef = query(collection(db, "postnotification"), where("postcreatorID", "==", auth.currentUser.uid));
+      onSnapshot(postnotificaionRef,((postnotiDoc) =>{
+        postnotiDoc.forEach((notification) => {
+          if(!state.PostNotification.some((snap) => snap.postnotificationID === notification.id)){
+            const postIDRef = (doc(db,"post",notification.data().postID))
+            getDoc(postIDRef).then((post) =>{
+              const creatorRef = (doc(db,"user",notification.data().user))
+              getDoc(creatorRef).then((creator) =>{
+                const data ={
+                  postnotificationID:notification.data().postnotiID,
+                  posttitle:post.data().posttitle,
+                  posttype:post.data().posttype,
+                  postsalary:post.data().postsalary,
+                  posteducation:post.data().posteducation,
+                  postHTML:post.data().PostHTML,
+                  status:notification.data().status,
+                  postuserfirstname:creator.data().firstname,
+                  postuserlastname:creator.data().lastname,
+                  postuserphone:creator.data().phone,
+                  postusergender:creator.data().gender,
+                  postuserdate:creator.data().date,
+                  postusereducation:creator.data().education,
+                  postuserdescription:creator.data().description,
+                  postuserimage:creator.data().profileimage,
+                  postuserdocumentimage:creator.data().doucmentimage,
+                  postdate:notification.data().date,
+                }
+                state.PostNotification.push(data)
+              })
+            })
+  
+          }
+          console.log(state.PostNotification)
+        });
+      }))
+    }
   },
   modules: {
   }

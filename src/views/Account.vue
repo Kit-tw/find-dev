@@ -11,12 +11,13 @@
 				<div class="user-avatar">
 					<img :src="ProfileImage">
 				</div>
-				<h5 class="user-name" >{{ $store.state.ProfileFirstname }}</h5>
+				<h5 class="user-name" v-if="role == 'organize'" >{{ $store.state.ProfileFirstname }}</h5>
+                <h5 class="user-name" v-if="role =='user'">{{ $store.state.ProfileFirstname }} {{ $store.state.ProfileLastname }} </h5>
 				<h6 class="user-email" >{{ $store.state.ProfileEmail }}</h6>
 			</div>
 			<div class="user-avatar">
                 <h5>Document</h5>
-					<img :src="ProfileDocument" >
+					<img :src="ProfileDocument" style="width: 250px; height: 250px;" >
 				</div>
 		</div>
 	</div>
@@ -29,12 +30,20 @@
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 				<h6 class="mb-2 text-primary">Personal Details</h6>
 			</div>
-			<div class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div v-if="role == 'organize'" class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
 					<label for="fullName">Full Name</label>
 					<input type="text" class="form-control" id="fullName" v-model="firstname">
 				</div>
 			</div>
+            <div v-if="role == 'user'" class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" v-model="firstname"></div>
+                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" v-model="lastname"></div>
+                </div>
+                <div v-if="role == 'user'" class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Date of Birth</label><input disabled type="text" class="form-control" v-model="date"></div>
+                    <div class="col-md-6"><label class="labels">Phone</label><input disabled type="text" class="form-control" v-model="phone"></div>
+                </div>
 		</div>
 		<div class="row gutters">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -42,14 +51,14 @@
 			</div>
 			<div class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
-					<label for="Street">Dscription</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="description" ></textarea>
+					<label for="Street">Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" v-model="description" ></textarea>
 				</div>
 			</div>
-            <div class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div v-if="role == 'organize'" class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
 					<label for="Street">Address</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="location" ></textarea>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" v-model="location" ></textarea>
 				</div>
 			</div>
 		</div>
@@ -87,7 +96,11 @@ export default {
             this.ModelActive = !this.ModelActive;
         },
         updateProfile(){
-            this.$store.dispatch("updateUserSetting");
+            if(this.$store.state.Role == 'organize'){
+                this.$store.dispatch("updateOrganizeSetting");
+            }else if(this.$store.state.Role == 'user'){
+                this.$store.dispatch("updateUserSetting");
+            }
             this.ModelActive = !this.ModelActive
         }
     },
@@ -136,6 +149,15 @@ export default {
         },
         email(){
             return this.$store.state.ProfileEmail
+        },
+        date(){
+            return this.$store.state.ProfileBirthDate
+        },
+        phone(){
+            return this.$store.state.ProfilePhone
+        },
+        role(){
+            return this.$store.state.Role
         }
     }
 }

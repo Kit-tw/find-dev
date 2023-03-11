@@ -25,26 +25,23 @@
                 <div class="form-group">
                     <label for="type">Job type </label>
                     <select class="form-select" aria-label="Default select example" v-model="posttype">
-                        <option disabled value="">Open this select menu</option>
-                        <option>One</option>
-                        <option>Two</option>
-                        <option>Three</option>
+                        <option v-for="(type,index) in getPostDetailType" :key="index.id" :value="type" >{{ type }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="type">Education </label>
-                    <select class="form-select" aria-label="Default select example" v-model="posteducation">
-                        <option disabled value="">Choice Education</option>
-                        <option value="มัธยมศึกษาตอนปลาย">มัธยมศึกษาตอนปลาย</option>
-                        <option value="ปริญญาตรี">ปริญญาตรี</option>
-                        <option value="ปริญญาโท">ปริญญาโท</option>
-                        <option value="ปริญญาเอก">ปริญญาเอก</option>
+                    <select class="form-select" aria-label="Default select example" v-model="postEducation">
+                        <option v-for="(Education,index) in getPostDetailEducation" :key="index.id" :value="Education" >{{ Education }}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="title">rate price</label>
                     <input type="number" class="form-control" name="title" v-model="postsalary" />
+                </div>
+                <div class="form-group">
+                    <label for="title">Vacancy</label>
+                    <input type="number" class="form-control" name="title" v-model="Vacancy" />
                 </div>
                 <div class="form-group">
                     <label for="title">welfare benefit and description</label>
@@ -73,7 +70,9 @@ import { db } from '../firebase'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Loading from "../components/Loading";
 export default {
-
+    created(){
+        this.$store.dispatch('getPostDetail')
+    },
     name: "CreateJob",
     data() {
         return {
@@ -86,8 +85,7 @@ export default {
                 ["bold", "italic", "underline"],
                 [{ list: "ordered" }, { list: "bullet" }],
                 ["code-block"]
-            ]
-
+            ],
         };
     },
     components: {
@@ -126,7 +124,7 @@ export default {
             );
         },
         uploadPost() {
-            if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.posteducation !== "" && this.postsalary !== 0) {
+            if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.postEducation !== "" && this.postsalary > 0  && this.Vacancy > 0) {
                 if (this.file) {
                     this.loading = true;
                     const stroge = getStorage()
@@ -150,10 +148,11 @@ export default {
                                     PostHTML: this.PostHTML,
                                     posttitle: this.posttitle,
                                     postsalary: this.postsalary,
-                                    posteducation: this.posteducation,
+                                    posteducation: this.postEducation,
                                     posttype: this.posttype,
                                     profileId: this.ProfileId,
                                     PostCoverPhoto: url,
+                                    postvacancy:this.Vacancy,
                                     PostCoverPhotoName: this.PostCoverPhotoName,
                                     date:serverTimestamp(),
                                 }
@@ -161,7 +160,7 @@ export default {
                             console.log("Document written with ID: ", newDocRef.id);
                             // await this.$store.dispatch("getPost");
                             this.loading = false;
-                            this.$router.push({ name: "ListJob"});
+                            this.$router.push({ name: "Home"});
                         })}
                     );
                     return;
@@ -198,7 +197,7 @@ export default {
             }, set(payload) {
                 this.$store.commit("Uploadposttype", payload);
             }
-        }, posteducation: {
+        }, postEducation: {
             get() {
                 return this.$store.state.posteducation;
             }, set(payload) {
@@ -219,7 +218,21 @@ export default {
             },
         }, PostCoverPhotoName() {
             return this.$store.state.PostPhotoName;
-        }
+        },
+        Vacancy: {
+            get() {
+                return this.$store.state.postvacancy;
+            },
+            set(payload) {
+                this.$store.commit("UploadVacancy", payload);
+            },
+        },
+    getPostDetailType(){
+      return this.$store.state.PostDetailType
+    },
+    getPostDetailEducation(){
+      return this.$store.state.PostDetailEducation
+    }
     }
 }
 </script>

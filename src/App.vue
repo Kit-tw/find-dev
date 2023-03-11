@@ -1,7 +1,8 @@
 <template>
   <div class="class app-warpper">
-    <div class="class app">
+    <div class="class app" v-if="this.$store.state.postLoaded">
       <Navigation v-if="!navigation"/>
+      <SidebarAdmin v-if="navigation && admin"/>
       <router-view/>
       <Footer v-if="!navigation"></Footer>
     </div>
@@ -10,14 +11,14 @@
 <script>
 import Navigation from "./components/Navigation.vue"
 import Footer from "./components/Footer.vue"
-import {onBeforeMount} from 'vue'
-import {useStore} from 'vuex'
 import { auth } from './firebase'
+import SidebarAdmin from "./components/SidebarAdmin.vue"
 export default {
-  components :{Navigation,Footer},
+  components :{Navigation,Footer,SidebarAdmin},
   data(){
     return{
       navigation :null,
+      admin:null,
     }
   },created(){
     auth.onAuthStateChanged((user) =>{
@@ -25,17 +26,28 @@ export default {
       
       if(user){
         this.$store.dispatch('getcurrentUser')
+        
       }
     })
     this.checkRoute()
     this.$store.dispatch('getPost')
+    this.$store.dispatch('getPostNotifacionUser')
+      this.$store.dispatch('getPostNotifacionOrganize')
+   
   },
   methods:{
     checkRoute(){
-        if(this.$route.name ==="RegisterSeeker" || this.$route.name ==="LoginForm" || this.$route.name ==="Registerorganize"){
+        if(this.$route.name ==="RegisterSeeker" || this.$route.name ==="LoginForm" || this.$route.name ==="RegisterOrganize"){
           this.navigation =true
           return;
-        }this.navigation = false
+        }
+        if(this.$route.name ==="AdminOrganize"){
+          this.navigation =true
+          this.admin = true
+          return;
+        }
+        this.navigation = false
+        this.admin = false;
     }
   },
   watch:{
