@@ -12,7 +12,7 @@
 					<img :src="ProfileImage">
 				</div>
 				<h5 class="user-name" v-if="role == 'organize'" >{{ $store.state.ProfileFirstname }}</h5>
-                <h5 class="user-name" v-if="role =='user'">{{ $store.state.ProfileFirstname }} {{ $store.state.ProfileLastname }} </h5>
+                <h5 class="user-name" v-if="role =='user' || role =='admin'">{{ $store.state.ProfileFirstname }} {{ $store.state.ProfileLastname }} </h5>
 				<h6 class="user-email" >{{ $store.state.ProfileEmail }}</h6>
 			</div>
 			<div class="user-avatar">
@@ -36,11 +36,11 @@
 					<input type="text" class="form-control" id="fullName" v-model="firstname">
 				</div>
 			</div>
-            <div v-if="role == 'user'" class="row mt-2">
+            <div v-if="role == 'user'  || role =='admin' " class="row mt-2">
                     <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" v-model="firstname"></div>
                     <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" v-model="lastname"></div>
                 </div>
-                <div v-if="role == 'user'" class="row mt-2">
+                <div v-if="role == 'user'  || role =='admin' " class="row mt-2">
                     <div class="col-md-6"><label class="labels">Date of Birth</label><input disabled type="text" class="form-control" v-model="date"></div>
                     <div class="col-md-6"><label class="labels">Phone</label><input disabled type="text" class="form-control" v-model="phone"></div>
                 </div>
@@ -98,7 +98,7 @@ export default {
         updateProfile(){
             if(this.$store.state.Role == 'organize'){
                 this.$store.dispatch("updateOrganizeSetting");
-            }else if(this.$store.state.Role == 'user'){
+            }else if(this.$store.state.Role == 'user' || this.$store.state.Role == 'admin'){
                 this.$store.dispatch("updateUserSetting");
             }
             this.ModelActive = !this.ModelActive

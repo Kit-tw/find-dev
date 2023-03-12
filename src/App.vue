@@ -26,13 +26,13 @@ export default {
       
       if(user){
         this.$store.dispatch('getcurrentUser')
+        this.$store.dispatch('getPostNotifacionUser')
+      this.$store.dispatch('getPostNotifacionOrganize')
         
       }
     })
     this.checkRoute()
     this.$store.dispatch('getPost')
-    this.$store.dispatch('getPostNotifacionUser')
-      this.$store.dispatch('getPostNotifacionOrganize')
    
   },
   methods:{

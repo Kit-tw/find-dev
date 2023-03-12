@@ -1,7 +1,7 @@
 <template>
 
 
-        <div class="col-md-8 col-md-offset-2">
+        <div v-if="this.$store.state.verify == 1" class="col-md-8 col-md-offset-2">
 
             <h1>Post Job</h1>
 
@@ -138,7 +138,7 @@ export default {
                             this.loading = false;
                         },
                          async () => {
-                            getDownloadURL(uploadTask.snapshot.ref).then(url => {
+                            getDownloadURL(uploadTask.snapshot.ref).then(async url => {
                             const newDocRef = doc(collection(db, "post"))
                             this.downloadURL = url;
                             setDoc(
@@ -157,7 +157,7 @@ export default {
                                     date:serverTimestamp(),
                                 }
                             )
-                            console.log("Document written with ID: ", newDocRef.id);
+                            
                             // await this.$store.dispatch("getPost");
                             this.loading = false;
                             this.$router.push({ name: "Home"});

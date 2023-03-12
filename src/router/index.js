@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import {auth} from '../firebase'
+import store from "../store/index"
 
 const routes = [
   {
@@ -16,12 +17,18 @@ const routes = [
   {
     path: '/Account',
     name: 'Account',
-    component: () => import('../views/Account.vue')
+    component: () => import('../views/Account.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/CreateJob',
     name: 'CreateJob',
-    component: () => import('../views/CreateJob.vue')
+    component: () => import('../views/CreateJob.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/ListJob',
@@ -49,20 +56,47 @@ const routes = [
   {
     path: '/Notification',
     name: 'Notification',
-    component: () => import('../views/Notification.vue')
+    component: () => import('../views/Notification.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   }
   ,
   {
-    path: '/Detail-notification:notificationID',
+    path: '/Detail-notification/:notificationID',
     name: 'DetailNotification',
-    component: () => import('../views/DetailNotification.vue')
+    component: () => import('../views/DetailNotification.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   }
   ,
   {
     path: '/AdminOrganize',
     name: 'AdminOrganize',
-    component: () => import('../views/AdminOrganize.vue')
+    component: () => import('../views/AdminOrganize.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/Detail-Organize/:OrganizeID',
+    name: 'DetailOrganize',
+    component: () => import('../views/DetailOrganize.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   }
+  ,
+  {
+    path: '/Mypost',
+    name: 'Mypost',
+    component: () => import('../views/MyPost.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  }
+  ,
 
 ]
 
@@ -71,7 +105,11 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next) =>{
-  if((to.path == '/LoginForm' || to.path == '/RegisterForm') && auth.currentUser){
+  if(((to.path == '/LoginForm' || to.path == '/RegisterSeeker' || to.path == '/RegisterOrganize') && auth.currentUser) 
+    || ((to.path == '/CreateJob' || to.path == '/Mypost' ) && store.state.Role == "user") ||
+    ((to.path == '/AdminOrganize' || to.name == 'DetailOrganize' ) && store.state.Role == "user")
+    
+    ){
     next('/')
     return;
   }

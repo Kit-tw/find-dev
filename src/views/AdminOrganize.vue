@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="this.$store.state.Role =='admin'" class="container">
     <h2 class="me-2">Admin</h2>
     <h2 class="me-0">Verify Organize</h2>
     <ListOrganize :post="post" v-for="(post,index) in getOrganizeVerify" :key="index" />

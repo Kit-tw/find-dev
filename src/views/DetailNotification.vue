@@ -69,7 +69,7 @@
 import { doc, updateDoc, serverTimestamp, collection } from "firebase/firestore";
 import { db } from '../firebase'
 export default {
-    name: "Detail-Notification",
+    name: "DetailNotification",
     data() {
         return {
             currentPost: null,

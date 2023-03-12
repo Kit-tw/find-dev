@@ -17,7 +17,7 @@
 
 
     <!-- Job Detail Start -->
-    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s" v-if="currentPost">
         <div class="container">
             <div class="row gy-5 gx-4">
                 <div class="col-lg-8">
@@ -26,22 +26,22 @@
                         <img class="flex-shrink-0 img-fluid border rounded" :src="postProfileImage" alt=""
                             style="width: 80px; height: 80px;">
                         <div class="text-start ps-4">
-                            <h3 class="mb-3">{{ this.posttitle }}</h3>
+                            <h3 class="mb-3">{{ this.currentPost[0].posttitle }}</h3>
                             <span class="text-truncate me-3"><font-awesome-icon :style="{ color: '#00B074' }" class="me-2 "
-                                    icon="fa-solid fa-briefcase" />{{ this.posttype }}</span>
+                                    icon="fa-solid fa-briefcase" />{{ this.currentPost[0].posttype }}</span>
                             <span class="text-truncate me-3"><font-awesome-icon :style="{ color: '#00B074' }" class="me-2 "
-                                    icon="fas fa-graduation-cap" />{{ this.posteducation }}</span>
+                                    icon="fas fa-graduation-cap" />{{ this.currentPost[0].posteducation }}</span>
                             <span class="text-truncate me-0"><font-awesome-icon :style="{ color: '#00B074' }" class="me-2 "
-                                    icon="fa-solid fa-money-check-dollar" />{{ this.postsalary }} บาท</span>
+                                    icon="fa-solid fa-money-check-dollar" />{{ this.currentPost[0].postsalary }} บาท</span>
                         </div>
                     </div>
 
                     <div class="mb-5">
-                        <h4 class="mb-3">Post by {{ this.Profilename }}</h4>
+                        <h4 class="mb-3">Post by {{ this.currentPost[0].postProfilename }}</h4>
                         <h4 class="mb-3">Job description</h4>
-                        <div v-html="this.PostHTML"> </div>
+                        <div v-html="this.currentPost[0].PostHTML"> </div>
                         <h4 class="mb-3">Address</h4>
-                        <p>{{ this.postProfilelocation }}</p>
+                        <p>{{ this.currentPost[0].postProfilelocation }}</p>
                     </div>
 
                     <div class="col-12">
@@ -54,15 +54,15 @@
                     <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
                         <h4 class="mb-4">Job Summery</h4>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ตำแหน่ง: {{
-                            this.postvacancy }} คน</p>
-                        <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ประเภท: {{ this.posttype
+                            this.currentPost[0].postvacancy }} คน</p>
+                        <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ประเภท: {{ this.currentPost[0].posttype
                         }}</p>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> เงินเดือน: {{
-                            this.postsalary }} บาท</p>
+                            this.currentPost[0].postsalary }} บาท</p>
                     </div>
                     <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
                         <h4 class="mb-4">Company Detail</h4>
-                        <p class="m-0">{{ this.postProfileDescription }}</p>
+                        <p class="m-0">{{ this.currentPost[0].postProfileDescription }}</p>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import router from '../router'
 import { auth, db } from '../firebase'
-import { doc, getDoc,updateDoc,query,orderBy,collection,getDocs,onSnapshot,where} from "firebase/firestore";
+import { doc, getDoc,updateDoc,query,orderBy,collection,getDocs,onSnapshot,where,deleteDoc} from "firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 export default createStore({
@@ -40,6 +40,7 @@ export default createStore({
     PostDetailType:null,
     PostDetailEducation:null,
     verify:null,
+    MyPost:[],
 
   },
   getters: {
@@ -58,6 +59,9 @@ export default createStore({
     ,
     getOrganizeVerify(state){
       return state.OrganizeVerify
+    },
+    getOrganizationPost(state){
+      return state.MyPost
     }
   },
   mutations: {
@@ -141,16 +145,25 @@ export default createStore({
     },
     UploadImageDocument(state,payload){
       
+    },
+    fliterPost(state,payload){
+      state.Post = state.Post.filter((post) => post.PostID !== payload)
+      state.MyPost = state.MyPost.filter((post) => post.PostID !== payload)
     }
   },
   actions: {
     async getcurrentUser({ commit }) {
       const dbResult = await getDoc(doc(db, "user", auth.currentUser.uid));
-      if(dbResult.data().role == "user"){
+      if(dbResult.data().role == "user" || dbResult.data().role == "admin"){
         commit('SetUserProfileInfo', dbResult)
         return;
       }
-      commit('SetOrganizeProfileInfo', dbResult)
+      if(dbResult.data().role == "organize"){
+        commit('SetOrganizeProfileInfo', dbResult)
+        return;
+      }
+
+
       return;
     },
     async updateOrganizeSetting({commit,state}){
@@ -289,7 +302,9 @@ export default createStore({
                 profileID:organize.data().profileID,
                 name:organize.data().name,
                 profileimage:organize.data().profileimage,
-                documentimage:organize.data().doucmentimage
+                documentimage:organize.data().doucmentimage,
+                profiledescription:organize.data().description,
+                verify:organize.data().verify,
                 }
                 state.OrganizeVerify.push(data)
              
@@ -299,6 +314,28 @@ export default createStore({
           console.log(state.OrganizeVerify)
         });
       })))
+
+    },
+    async getOrganizationPost({state}){
+      const OrganizationPostRef = query(collection(db, "post"), where("profileId", "==", auth.currentUser.uid));
+      onSnapshot(OrganizationPostRef,((OrganizationPost) =>{
+        OrganizationPost.forEach((post) => {
+          if(!state.MyPost.some((snap) => snap.PostID === post.id)){
+           const data={
+            PostID:post.data().PostID,
+            posttitle:post.data().posttitle
+           }
+           state.MyPost.push(data)
+  
+          }
+          console.log(state.MyPost)
+        });
+      }))
+
+    },
+    async DeletePost({commit},payload){
+      const getPost = await deleteDoc(doc(db,"post",payload))
+      commit("fliterPost",payload)
 
     },
   },
