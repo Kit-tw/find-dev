@@ -1,24 +1,27 @@
 <template>
+   <body>
+        <div class="container-xxl bg-white p-0">
   <div class="class app-warpper">
     <div class="class app" v-if="this.$store.state.postLoaded">
       <Navigation v-if="!navigation"/>
-      <SidebarAdmin v-if="navigation && admin"/>
       <router-view/>
       <Footer v-if="!navigation"></Footer>
     </div>
   </div>
+  </div>
+   </body>
 </template>
 <script>
 import Navigation from "./components/Navigation.vue"
 import Footer from "./components/Footer.vue"
 import { auth } from './firebase'
-import SidebarAdmin from "./components/SidebarAdmin.vue"
 export default {
-  components :{Navigation,Footer,SidebarAdmin},
+  components :{
+    Navigation,Footer
+  },
   data(){
     return{
       navigation :null,
-      admin:null,
     }
   },created(){
     auth.onAuthStateChanged((user) =>{
@@ -26,13 +29,13 @@ export default {
       
       if(user){
         this.$store.dispatch('getcurrentUser')
-        this.$store.dispatch('getPostNotifacionUser')
-      this.$store.dispatch('getPostNotifacionOrganize')
         
       }
     })
     this.checkRoute()
     this.$store.dispatch('getPost')
+    this.$store.dispatch('getPostNotifacionUser')
+      this.$store.dispatch('getPostNotifacionOrganize')
    
   },
   methods:{
@@ -41,13 +44,7 @@ export default {
           this.navigation =true
           return;
         }
-        if(this.$route.name ==="AdminOrganize"){
-          this.navigation =true
-          this.admin = true
-          return;
-        }
         this.navigation = false
-        this.admin = false;
     }
   },
   watch:{
@@ -72,16 +69,6 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-.container {
-  max-width: 1440px;
-  margin: 0 auto;
-}
-.link {
-  cursor: pointer;
-  text-decoration: none;
-  text-transform: uppercase;
-  color: black;
 }
 .link-light {
   color: #fff;

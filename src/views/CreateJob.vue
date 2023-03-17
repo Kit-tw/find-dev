@@ -3,55 +3,55 @@
 
         <div v-if="this.$store.state.verify == 1" class="col-md-8 col-md-offset-2">
 
-            <h1>Post Job</h1>
+            <h1>โพสงาน</h1>
 
             <form>
                 <ImagePreview v-show="this.$store.state.PostPhotoPreview" />
                 <Loading v-show="loading" />
                 <div class="form-group has-error">
-                    <label for="Name">Title <span class="require"></span></label>
+                    <label for="Name">ชื่องาน <span class="require"></span></label>
                     <input type="text" class="form-control" name="Name" v-model="posttitle" />
 
                 </div>
                 <div class="form-group upload-file">
-                    <label for="Post-photo" class="bn3">Upload Cover Photo</label>
+                    <label for="Post-photo" class="bn3">อัพโหลดรูปภาพเสริม</label>
                     <input type="file" ref="PostPhoto" id="Post-photo" @change="fileChange" accept=".png, .jpg, ,jpeg" />
                     <button @click.prevent="openPreview" class="preview bn3"
                         :class="{ 'button-inactive': !this.$store.state.PostPhotoFileURL }">
-                        Preview Photo
+                        ดูรูปภาพ
                     </button>
-                    <span>File Chosen: {{ this.$store.state.PostPhotoName }}</span>
+                    <span>ไฟล์ที่เลือก: {{ this.$store.state.PostPhotoName }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="type">Job type </label>
+                    <label for="type">ลักษณะงาน </label>
                     <select class="form-select" aria-label="Default select example" v-model="posttype">
                         <option v-for="(type,index) in getPostDetailType" :key="index.id" :value="type" >{{ type }}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="type">Education </label>
+                    <label for="type">ระดับชั้นการศึกษา </label>
                     <select class="form-select" aria-label="Default select example" v-model="postEducation">
                         <option v-for="(Education,index) in getPostDetailEducation" :key="index.id" :value="Education" >{{ Education }}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="title">rate price</label>
+                    <label for="title">เงินเดือน</label>
                     <input type="number" class="form-control" name="title" v-model="postsalary" />
                 </div>
                 <div class="form-group">
-                    <label for="title">Vacancy</label>
+                    <label for="title">จำนวนคน</label>
                     <input type="number" class="form-control" name="title" v-model="Vacancy" />
                 </div>
                 <div class="form-group">
-                    <label for="title">welfare benefit and description</label>
+                    <label for="title">รายละเอียดและสวัสดิการ</label>
                     <VueEditor :editor-toolbar="customToolbar" v-model="PostHTML" />
                 </div>
                 <div :class="{ invisible: !error }" class="err-message">
-                    <p><span>Error:</span>{{ this.errorMsg }}</p>
+                    <p><span>ผิดพลาด:</span>{{ this.errorMsg }}</p>
                 </div>
                 <div class="form-group">
-                    <button @click.prevent="uploadPost" class="btn btn-primary">Create</button>
+                    <button @click.prevent="uploadPost" class="btn btn-primary">สร้าง</button>
                 </div>
 
 
@@ -166,14 +166,14 @@ export default {
                     return;
                 }
                 this.error = true;
-                this.errorMsg = "Please ensure you uploaded a cover photo!";
+                this.errorMsg = "กรุณาใส่รูปภาพเสริม!";
                 setTimeout(() => {
                     this.error = false;
                 }, 5000);
                 return;
             }
             this.error = true;
-            this.errorMsg = "Please fill all the field";
+            this.errorMsg = "กรุณาใส่ทุกช่อง";
             setTimeout(() => {
                 this.error = false;
             }, 5000);

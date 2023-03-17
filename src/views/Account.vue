@@ -16,7 +16,7 @@
 				<h6 class="user-email" >{{ $store.state.ProfileEmail }}</h6>
 			</div>
 			<div class="user-avatar">
-                <h5>Document</h5>
+                <h5>เอกสาร</h5>
 					<img :src="ProfileDocument" style="width: 250px; height: 250px;" >
 				</div>
 		</div>
@@ -28,36 +28,36 @@
 	<div class="card-body">
 		<div class="row gutters">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-				<h6 class="mb-2 text-primary">Personal Details</h6>
+				<h6 class="mb-2 text-primary">รายละเอียดเฉพาะ</h6>
 			</div>
             <div v-if="role == 'organize'" class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
-					<label for="fullName">Full Name</label>
+					<label for="fullName">ชื่อบริษัท</label>
 					<input type="text" class="form-control" id="fullName" v-model="firstname">
 				</div>
 			</div>
             <div v-if="role == 'user'  || role =='admin' " class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" v-model="firstname"></div>
-                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" v-model="lastname"></div>
+                    <div class="col-md-6"><label class="labels">ชื่อ</label><input type="text" class="form-control" v-model="firstname"></div>
+                    <div class="col-md-6"><label class="labels">นามสกุล</label><input type="text" class="form-control" v-model="lastname"></div>
                 </div>
                 <div v-if="role == 'user'  || role =='admin' " class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Date of Birth</label><input disabled type="text" class="form-control" v-model="date"></div>
-                    <div class="col-md-6"><label class="labels">Phone</label><input disabled type="text" class="form-control" v-model="phone"></div>
+                    <div class="col-md-6"><label class="labels">วันเกิด</label><input disabled type="text" class="form-control" v-model="date"></div>
+                    <div class="col-md-6"><label class="labels">เบอร์โทรศัพท์</label><input disabled type="text" class="form-control" v-model="phone"></div>
                 </div>
 		</div>
 		<div class="row gutters">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-				<h6 class="mt-3 mb-2 text-primary">About</h6>
+				<h6 class="mt-3 mb-2 text-primary">เกี่ยวกับ</h6>
 			</div>
 			<div class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
-					<label for="Street">Description</label>
+					<label for="Street">รายละเอียด</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" v-model="description" ></textarea>
 				</div>
 			</div>
             <div v-if="role == 'organize'" class="col-xl-10 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="form-group">
-					<label for="Street">Address</label>
+					<label for="Street">ที่อยู่</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" v-model="location" ></textarea>
 				</div>
 			</div>
@@ -66,7 +66,7 @@
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="text-right">
 					<!-- <button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button> -->
-					<button type="button" @click="updateProfile" id="submit" name="submit" class="btn btn-primary">Update</button>
+					<button type="button" @click="updateProfile" id="submit" name="submit" class="btn btn-primary">เปลี่ยนแปลง</button>
 				</div>
 			</div>
 		</div>

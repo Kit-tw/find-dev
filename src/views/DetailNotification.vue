@@ -35,21 +35,21 @@
                         <h4 class="mb-3">ประวัติส่วนตัว</h4>
                         <snap class="mb-3">{{ this.postProfileDescription }}</snap>
                         <div class="mb-3" v-html="this.PostHTML"> </div>
-                        <h4 class="mb-3">Resume</h4>
+                        <h4 class="mb-3">เรซูเม่</h4>
                     <img class="flex-shrink-0 img-fluid" :src="postuserdocumentimage" style="width: 500px; height: 200;">
                     </div>
 
                     <div class="col-12">
                         <h4  v-if="role == 'organize' && status == 'รอยืนยัน' "  class="mb-3">นัดวันสัมภาษณ์</h4>
                         <input v-if="role == 'organize' && status == 'รอยืนยัน' " type="date" v-model="date" />
-                        <button v-if="role == 'organize' && status == 'รอยืนยัน' " class="btn btn-success w-100" type="submit" @click="AcceptJob">Accept Job</button>
+                        <button v-if="role == 'organize' && status == 'รอยืนยัน' " class="btn btn-success w-100" type="submit" @click="AcceptJob">ยอมรับงาน</button>
                     </div>
 
                 </div>
 
                 <div class="col-lg-4">
                     <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
-                        <h4 class="mb-4">Job Description</h4>
+                        <h4 class="mb-4">รายละเอียดของงาน</h4>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ชื่อ: {{
                             this.posttitle }}</p>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ประเภท: {{ this.posttype
@@ -126,10 +126,15 @@ export default {
                date:this.date
             })
             this.$store.state.PostNotification.filter((post) => {
-                if(post.postnotificationID === this.$route.params.notificationID)
+                if(post.postnotificationID === this.$route.params.notificationID){
+                    post.postdate = this.date
+                }
                 return post.status = "รับสัมภาษณ์"
         });
             alert("เรียบร้อย")
+        
+            this.$store.dispatch("fliterNotification",this.postnotificationID)
+    
             this.$router.push({ name: "Notification"});
         }
     },

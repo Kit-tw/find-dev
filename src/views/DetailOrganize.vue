@@ -10,13 +10,13 @@
 
                     <div class="mb-5">
                         <h4 class="mb-3">{{ this.ProfileName }}</h4>
-                        <h4 class="mb-3">Organization description</h4>
+                        <h4 class="mb-3">รายละเอียดของบริษัท</h4>
                         <div v-html="this.ProfileDescription"> </div>
                         <img class="flex-shrink-0 img-fluid me-3" :src="ProfileDocumentImage" style="width: 500px; height: 500px;">
                     </div>
 
                     <div class="col-12">
-                        <button class="btn btn-success w-100" type="submit" @click="Accept">Verify</button>
+                        <button class="btn btn-success w-100" type="submit" @click="Accept">ยืนยัน</button>
                     </div>
 
                 </div>

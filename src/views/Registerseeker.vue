@@ -171,19 +171,19 @@ export default {
                     }).catch((error) => {
                         switch (error.code) {
                             case 'auth/email-already-in-use':
-                                alert("Email already in use")
+                                alert("อีเมลถูกใช้ไปแล้ว")
                                 break
                             case 'auth/invalid-email':
-                                alert("Invalid email")
+                                alert("อีเมลไม่ถูกต้อง")
                                 break
                             case 'auth/operation-not-allowed':
                                 alert("Operation not allowed")
                                 break
                             case 'auth/weak-password':
-                                alert("Weak password")
+                                alert("รหัสผ่านอ่อนแอ")
                                 break
                             default:
-                                alert("Something went wrong")
+                                alert("มีบางอย่างผิดพลาด")
                         }
                     });
                     this.loading = false;

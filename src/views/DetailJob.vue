@@ -1,14 +1,14 @@
 <template>
+    
     <div class="container-xxl py-5 bg-dark page-header mb-5">
         <div class="container my-5 pt-5 pb-4">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Job Detail</h1>
+            <h1 class="display-3 text-white mb-3 animated slideInDown">รายละเอียดงาน</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb text-uppercase">
                     <li class="breadcrumb-item"> <router-link style="color: rgb(8, 192, 131)"
-                            :to="{ name: 'Home' }">Home</router-link></li>
-                    <li class="breadcrumb-item"> <router-link style="color: rgb(8, 192, 131)" :to="{ name: 'ListJob' }">Find
-                            job</router-link></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">Job Detail</li>
+                            :to="{ name: 'Home' }">หน้าหลัก</router-link></li>
+                    <li class="breadcrumb-item"> <router-link style="color: rgb(8, 192, 131)" :to="{ name: 'ListJob' }">หางานทั้งหมด</router-link></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">รายละเอียดงาน</li>
                 </ol>
             </nav>
         </div>
@@ -37,10 +37,10 @@
                     </div>
 
                     <div class="mb-5">
-                        <h4 class="mb-3">Post by {{ this.currentPost[0].postProfilename }}</h4>
-                        <h4 class="mb-3">Job description</h4>
+                        <h4 class="mb-3">ประกาศโดย {{ this.currentPost[0].postProfilename }}</h4>
+                        <h4 class="mb-3">รายละเอียดงาน</h4>
                         <div v-html="this.currentPost[0].PostHTML"> </div>
-                        <h4 class="mb-3">Address</h4>
+                        <h4 class="mb-3">ที่อยู่บริษัท</h4>
                         <p>{{ this.currentPost[0].postProfilelocation }}</p>
                     </div>
 
@@ -52,7 +52,7 @@
 
                 <div class="col-lg-4">
                     <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
-                        <h4 class="mb-4">Job Summery</h4>
+                        <h4 class="mb-4">สรุปเกี่ยวกับงาน</h4>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ตำแหน่ง: {{
                             this.currentPost[0].postvacancy }} คน</p>
                         <p><font-awesome-icon icon="fa-solid fa-angles-right text-primary me-2" /> ประเภท: {{ this.currentPost[0].posttype
@@ -61,7 +61,7 @@
                             this.currentPost[0].postsalary }} บาท</p>
                     </div>
                     <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
-                        <h4 class="mb-4">Company Detail</h4>
+                        <h4 class="mb-4">รายละเอียดของบริษัท</h4>
                         <p class="m-0">{{ this.currentPost[0].postProfileDescription }}</p>
                     </div>
                 </div>

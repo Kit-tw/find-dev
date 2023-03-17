@@ -44,14 +44,23 @@ export default {
     },methods:{
         async signIn(){
         await signInWithEmailAndPassword(auth, this.email, this.password).then((data) =>{
-            this.$router.push({name : "Home"})
+            
             this.error =false;
             this.errorMsg ="";
+            return this.$router.push({name : "Home"})
         }).catch((err) =>{
-            this.err = true;
-            this.errorMsg = err.message;
-            alert(errorMsg)
-        })
+            this.error = true;
+        switch(err.code) {
+          case 'auth/user-not-found':
+          this.errorMsg = "ไม่มีผู้ใช้"
+            break
+          case 'auth/wrong-password':
+          this.errorMsg = "รหัสผ่านไม่ถูกต้อง"
+            break
+          default:
+          this.errorMsg = "มีบางอย่างผิดพลาด"
+            return ;
+        }})
         }
     }
 }

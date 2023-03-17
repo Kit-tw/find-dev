@@ -15,7 +15,7 @@
                                     </div>
                                     <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                         <div class="d-flex mb-3"> 
-                                            <router-link :to="{name : 'DetailOrganize' ,params : {OrganizeID : this.post.profileID}}" class="button-3">View Description</router-link>
+                                            <router-link :to="{name : 'DetailOrganize' ,params : {OrganizeID : this.post.profileID}}" class="button-3">ดูรายละเอียด</router-link>
                                         </div>
                                     </div>
                                 </div>

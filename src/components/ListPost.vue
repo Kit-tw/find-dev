@@ -1,6 +1,5 @@
 <template>
-  <div class="container-xl py-1">
-          <div class="container">
+ 
               <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
                   <div class="tab-content">
                       <div id="tab-1" class="tab-pane fade show p-0 active">
@@ -17,7 +16,7 @@
                                   </div>
                                   <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
                                       <div class="d-flex mb-3"> 
-                                          <router-link :to="{name : 'DetailJob' ,params : {postid : this.post.PostID}}" class="button-3">View More</router-link>
+                                          <router-link :to="{name : 'DetailJob' ,params : {postid : this.post.PostID}}" class="button-3">ดูเพิ่มเติม</router-link>
                                       </div>
                                   </div>
                               </div>
@@ -25,8 +24,7 @@
                   </div>
               </div>
           </div>
-      </div>
-    </div>
+ 
 </template>
 
 <script>
@@ -48,10 +46,10 @@ props:["post"]
   transition: .5s;
 }
 
-// .job-item:hover {
-//   border-color: rgba(0, 0, 0, .08);
-//   box-shadow: none;
-// }
+.job-item:hover {
+  border-color: rgba(0, 0, 0, 0.774);
+  box-shadow: none;
+}
 
 .button-3 {
 appearance: none;

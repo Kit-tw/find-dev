@@ -62,7 +62,10 @@ export default createStore({
     },
     getOrganizationPost(state){
       return state.MyPost
-    }
+    },
+    PostHomeView(state) {
+      return state.Post.slice(0, 5);
+    },
   },
   mutations: {
     CLEAR_USER(state) {
@@ -149,6 +152,13 @@ export default createStore({
     fliterPost(state,payload){
       state.Post = state.Post.filter((post) => post.PostID !== payload)
       state.MyPost = state.MyPost.filter((post) => post.PostID !== payload)
+    },
+    fliterNotification(state,payload){
+      state.PostNotification = state.PostNotification.filter((post) => post.postnotificationID !== payload)
+
+    },fliterNotificationForDelete(state,payload){
+      state.PostNotification = state.PostNotification.filter((post) => post.postID !== payload)
+
     }
   },
   actions: {
@@ -264,6 +274,7 @@ export default createStore({
               const creatorRef = (doc(db,"user",notification.data().user))
               getDoc(creatorRef).then((creator) =>{
                 const data ={
+                  postID :notification.data().postID,
                   postnotificationID:notification.data().postnotiID,
                   posttitle:post.data().posttitle,
                   posttype:post.data().posttype,
@@ -336,6 +347,7 @@ export default createStore({
     async DeletePost({commit},payload){
       const getPost = await deleteDoc(doc(db,"post",payload))
       commit("fliterPost",payload)
+      commit("fliterNotificationForDelete",payload)
 
     },
   },

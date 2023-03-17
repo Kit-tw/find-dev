@@ -19,8 +19,8 @@
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    // justify-content: center;
+    // align-items: center;
     @keyframes spin {
       to {
         transform: rotateZ(360deg);

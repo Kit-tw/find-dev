@@ -97,6 +97,14 @@ const routes = [
     },
   }
   ,
+  {
+    path: '/About',
+    name: 'About',
+    component: () => import('../views/About.vue'),
+    
+  }
+  ,
+  
 
 ]
 
@@ -107,7 +115,7 @@ const router = createRouter({
 router.beforeEach((to,from,next) =>{
   if(((to.path == '/LoginForm' || to.path == '/RegisterSeeker' || to.path == '/RegisterOrganize') && auth.currentUser) 
     || ((to.path == '/CreateJob' || to.path == '/Mypost' ) && store.state.Role == "user") ||
-    ((to.path == '/AdminOrganize' || to.name == 'DetailOrganize' ) && store.state.Role == "user")
+    ((to.name == 'AdminOrganize' || to.name == 'DetailOrganize' ) && store.state.Role !== "admin")
     
     ){
     next('/')
