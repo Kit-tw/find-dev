@@ -34,8 +34,8 @@ export default {
     })
     this.checkRoute()
     this.$store.dispatch('getPost')
-    this.$store.dispatch('getPostNotifacionUser')
-      this.$store.dispatch('getPostNotifacionOrganize')
+    // this.$store.dispatch('getPostNotifacionUser')
+    //   this.$store.dispatch('getPostNotifacionOrganize')
    
   },
   methods:{

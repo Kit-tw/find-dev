@@ -166,10 +166,13 @@ export default createStore({
       const dbResult = await getDoc(doc(db, "user", auth.currentUser.uid));
       if(dbResult.data().role == "user" || dbResult.data().role == "admin"){
         commit('SetUserProfileInfo', dbResult)
+        this.dispatch('getPostNotifacionUser')
+        
         return;
       }
       if(dbResult.data().role == "organize"){
         commit('SetOrganizeProfileInfo', dbResult)
+        this.dispatch('getPostNotifacionOrganize')
         return;
       }
 
@@ -259,7 +262,6 @@ export default createStore({
             })
   
           }
-          console.log(state.PostNotification)
         });
       })))
 
@@ -298,7 +300,6 @@ export default createStore({
             })
   
           }
-          console.log(state.PostNotification)
         });
       }))
     },
@@ -322,7 +323,6 @@ export default createStore({
             })
   
           }
-          console.log(state.OrganizeVerify)
         });
       })))
 

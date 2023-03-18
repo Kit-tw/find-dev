@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="col-12">
-                        <button v-if="role == 'user'" class="btn btn-success w-100" type="submit" @click="ApplyJob">Apply Now</button>
+                        <button v-if="role == 'user'" class="btn btn-success w-100" type="submit" @click="ApplyJob">สมัครงาน</button>
                     </div>
 
                 </div>
