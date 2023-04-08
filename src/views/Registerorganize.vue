@@ -1,8 +1,8 @@
 <template>
+     <Loading v-show="loading" />
     <div class="form_wrapper">
         <div class="form_container">
             <div class="title_container">
-                <Loading v-show="loading" />
                 <h2>สมัครสมาชิกสำหรับองค์กร</h2>
             </div>
             <div class="row clearfix">
@@ -90,21 +90,21 @@ export default {
         fileChangeprofile() {
             this.fileprofile = this.$refs.profile.files[0];
             const fileName = this.fileprofile.name;
-            this.$store.commit("fileNameChange", fileName);
-            this.$store.commit("createFileURL", URL.createObjectURL(this.fileprofile));
+            this.$store.commit("fileNameChangeProfileImage", fileName);
+            this.$store.commit("createPhotoURL", URL.createObjectURL(this.fileprofile));
         },
         fileChangedocument() {
             this.filedocument = this.$refs.document.files[0];
             const fileName = this.filedocument.name;
-            this.$store.commit("fileNameChange1", fileName);
-            this.$store.commit("createFileURL1", URL.createObjectURL(this.filedocument));
+            this.$store.commit("fileNameChangeProfileResume", fileName);
+            this.$store.commit("createResumeURL", URL.createObjectURL(this.filedocument));
         },
         async register() {
             if (this.email !== "" && this.password !== "" && this.name !== "" && this.location !== "" && this.description !== "") {
                 if (this.fileprofile && this.filedocument) {
                     this.loading = true;
                     const stroge = getStorage()
-                    const storageRef = ref(stroge, `User/Organize/Profile/${this.$store.state.PostPhotoName}`);
+                    const storageRef = ref(stroge, `User/Organize/Profile/${this.$store.state.ProfileImageName}`);
                     const uploadTask =  uploadBytesResumable(storageRef, this.fileprofile);
                      uploadTask.on("state_changed", (snapshot) => { console.log(snapshot); },
                         (err) => {
@@ -117,7 +117,7 @@ export default {
                             })
                         }
                     );
-                    const storageRef1 = ref(stroge, `User/Organize/Document/${this.$store.state.PostPhotoName1}`);
+                    const storageRef1 = ref(stroge, `User/Organize/Document/${this.$store.state.ProfileResumeName}`);
                     const uploadTask1 =  uploadBytesResumable(storageRef1, this.filedocument);
                      uploadTask1.on("state_changed", (snapshot) => { console.log(snapshot); },
                         (err) => {
@@ -166,14 +166,14 @@ export default {
                     return;
                 }
                 this.error = true;
-                this.errorMsg = "Please ensure you uploaded photo!";
+                this.errorMsg = "กรุณาอัพโหลดรูป";
                 setTimeout(() => {
                     this.error = false;
                 }, 5000);
                 return;
             }
             this.error = true;
-            this.errorMsg = "Please fill all the field";
+            this.errorMsg = "โปรดใส่ข้อมูลทั้งหมด";
             setTimeout(() => {
                 this.error = false;
             }, 5000);

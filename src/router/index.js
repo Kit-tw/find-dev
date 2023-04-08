@@ -103,8 +103,6 @@ const routes = [
     component: () => import('../views/About.vue'),
     
   }
-  ,
-  
 
 ]
 

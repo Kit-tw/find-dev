@@ -1,5 +1,5 @@
 <template>
-    <div class="loading">
+    <div class="loading container-xxl ">
       <span></span>
     </div>
   </template>
@@ -13,14 +13,14 @@
   <style lang="scss">
   .loading {
     top: 0;
-    z-index: 101;
+    z-index: 99999;
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     display: flex;
-    // justify-content: center;
-    // align-items: center;
+    justify-content: center;
+    align-items: center;
     @keyframes spin {
       to {
         transform: rotateZ(360deg);

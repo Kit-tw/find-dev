@@ -23,7 +23,7 @@
             <div class="container">
                 <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">งาน</h1>
         <ListPost :post="post" v-for="(post,index) in PostHomeView" :key="index" />
-        <a class="btn btn-primary py-3 px-5 h-100 d-flex align-items-center justify-content-center" href="">ดูงานเพิ่ม</a>
+        <router-link  :to="{name: 'ListJob'}" class="btn btn-primary py-3 px-5 h-100 d-flex align-items-center justify-content-center" href="">ดูงานเพิ่ม</router-link>
             </div>
         </div>
         <div class="container-xxl py-5">

@@ -19,6 +19,10 @@ export default createStore({
     ProfileBirthDate:null,
     ProfileImage:null,
     ProfileDocument:null,
+    ProfileImageURL:null,
+    ProfileImageName:"",
+    ProfileResumeURL:null,
+    ProfileResumeName:"",
     Role:null,
     PostHTML: "",
     posttitle:"",
@@ -41,6 +45,7 @@ export default createStore({
     PostDetailEducation:null,
     verify:null,
     MyPost:[],
+
 
   },
   getters: {
@@ -123,11 +128,17 @@ export default createStore({
     createFileURL(state, payload) {
       state.PostPhotoFileURL = payload;
     },
-    fileNameChange1(state, payload) {
-      state.PostPhotoName1 = payload;
+    fileNameChangeProfileImage(state, payload) {
+      state.ProfileImageName = payload;
     },
-    createFileURL1(state, payload) {
-      state.PostPhotoFileURL1 = payload;
+    fileNameChangeProfileResume(state, payload) {
+      state.ProfileResumeName = payload;
+    },
+    createPhotoURL(state, payload) {
+      state.ProfileImageURL = payload;
+    },
+    createResumeURL(state, payload) {
+      state.ProfileResumeURL = payload;
     },
     openPhotoPreview(state) {
       state.PostPhotoPreview = !state.PostPhotoPreview;
