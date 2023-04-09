@@ -1,6 +1,6 @@
 <template>
 
-
+        <h2 v-if="this.$store.state.verify == 0">กรุณารอแอดมินยืนยัน</h2>
         <div v-if="this.$store.state.verify == 1" class="col-md-8 col-md-offset-2">
 
             <h1>โพสงาน</h1>
@@ -69,6 +69,7 @@ import { doc, setDoc, serverTimestamp, collection } from "firebase/firestore";
 import { db } from '../firebase'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Loading from "../components/Loading";
+
 export default {
     created(){
         this.$store.dispatch('getPostDetail')

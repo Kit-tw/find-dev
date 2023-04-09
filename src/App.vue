@@ -5,7 +5,7 @@
     <div class="class app" v-if="this.$store.state.postLoaded">
       <Navigation v-if="!navigation"/>
       <router-view/>
-      <Footer v-if="!navigation"></Footer>
+      <Footer v-if="!navigation && !footer"></Footer>
     </div>
   </div>
   </div>
@@ -22,6 +22,7 @@ export default {
   data(){
     return{
       navigation :null,
+      footer:null,
     }
   },created(){
     auth.onAuthStateChanged((user) =>{
@@ -42,9 +43,16 @@ export default {
     checkRoute(){
         if(this.$route.name ==="RegisterSeeker" || this.$route.name ==="LoginForm" || this.$route.name ==="RegisterOrganize"){
           this.navigation =true
+          this.footer=true
+          return;
+        }
+        if(this.$route.name ==="CreateJob"){
+          this.navigation =false
+          this.footer=true
           return;
         }
         this.navigation = false
+        this.footer=false
     }
   },
   watch:{
