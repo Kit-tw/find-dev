@@ -116,18 +116,42 @@ export default {
         })
     },
     methods:{
-        ApplyJob(){
-            const newDocRef = doc(collection(db, "postnotification"))
-            setDoc(newDocRef,{
-                postnotiID:newDocRef.id,
-                postID:this.postID,
-                user:this.ProfileId,
-                postcreatorID:this.postProfileID,
-                status:"รอยืนยัน",
-            })
-            alert("สมัครเรียบร้อย")
-            this.$router.push({ name: "Home"});
-        }
+        // ApplyJob(){
+        //     const newDocRef = doc(collection(db, "postnotification"))
+        //     setDoc(newDocRef,{
+        //         postnotiID:newDocRef.id,
+        //         postID:this.postID,
+        //         user:this.ProfileId,
+        //         postcreatorID:this.postProfileID,
+        //         status:"รอยืนยัน",
+        //     })
+        //     alert("สมัครเรียบร้อย")
+        //     this.$router.push({ name: "Home"});
+        // }
+        ApplyJob() {
+    // check if the user has already applied for this job
+    if (this.$store.state.appliedPosts.includes(this.postID)) {
+      alert("คุณได้สมัครงานนี้ไปแล้ว");
+      return;
+    }
+    
+    // create a new document in the "postnotification" collection
+    const newDocRef = doc(collection(db, "postnotification"));
+    setDoc(newDocRef, {
+      postnotiID: newDocRef.id,
+      postID: this.postID,
+      user: this.ProfileId,
+      postcreatorID: this.postProfileID,
+      status: "รอยืนยัน",
+    });
+
+    // update the appliedPosts array in the Vuex store and local storage
+    this.$store.state.appliedPosts.push(this.postID);
+    localStorage.setItem("appliedPosts", JSON.stringify(this.$store.state.appliedPosts));
+
+    alert("สมัครเรียบร้อย");
+    this.$router.push({ name: "Home" });
+  },
     },
     computed:{
         role(){

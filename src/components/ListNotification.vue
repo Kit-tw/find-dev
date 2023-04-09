@@ -28,6 +28,7 @@
                                       </div>
                                       <div class="d-flex"> 
                                         <span v-if="post.status =='รับสัมภาษณ์'" class="text-truncate me-3">วันที่ {{post.postdate}} </span>
+                                        
                                       </div>
                                       <div class="d-flex mb-4"> 
                                         <router-link v-if="role =='organize'" :to="{name : 'DetailNotification' ,params : {notificationID : this.post.postnotificationID}}" class="button-3">View More</router-link>

@@ -40,12 +40,13 @@ export default createStore({
     Post:[],
     PostNotification:[],
     OrganizeVerify:[],
-    postLoaded:null,
+  
     PostDetailType:null,
     PostDetailEducation:null,
     verify:null,
-    MyPost:[],
-
+    Post: [],
+    postLoaded: null,
+    appliedPosts: localStorage.getItem("appliedPosts") ? JSON.parse(localStorage.getItem("appliedPosts")) : [],
 
   },
   getters: {
@@ -205,40 +206,43 @@ export default createStore({
         description:state.ProfileDescription,
       })
     },
-    async getPost({state}){
-      const PostRef = query(collection(db, 'post'), orderBy("date","desc"))
+    async getPost({ state }) {
+      const PostRef = query(collection(db, "post"), orderBy("date", "desc"));
       onSnapshot(PostRef, (PostSnapshot) => {
-        PostSnapshot.forEach((snap) =>{
-          if(!state.Post.some((post) => post.PostID === snap.id)){
-            const userRef = doc(db, "user", snap.data().profileId)
-            getDoc(userRef).then((object) =>{
-              const data ={
-                PostID:snap.data().PostID,
-                PostHTML:snap.data().PostHTML,
-                PostCoverPhoto:snap.data().PostCoverPhoto,
-                posteducation:snap.data().posteducation,
-                postsalary:snap.data().postsalary,
-                posttype:snap.data().posttype,
-                date:snap.data().date,
-                PostCoverPhotoName:snap.data().PostCoverPhotoName,
-                posttitle:snap.data().posttitle,
-                postProfileEmail:object.data().email,
-                postProfileDescription:object.data().description,
-                postProfilelocation:object.data().location,
-                postProfilename:object.data().name,
-                postProfileImage:object.data().profileimage,
-                postvacancy:snap.data().postvacancy,
-                postProfileID:snap.data().profileId
-              }
-              state.Post.push(data);
+        PostSnapshot.forEach((snap) => {
+          if (!state.Post.some((post) => post.PostID === snap.id)) {
+            // check if the job has already been applied for
+            if (!state.appliedPosts.includes(snap.data().PostID)) {
+              const userRef = doc(db, "user", snap.data().profileId);
+              getDoc(userRef).then((object) => {
+                const data = {
+                  PostID: snap.data().PostID,
+                  PostHTML: snap.data().PostHTML,
+                  PostCoverPhoto: snap.data().PostCoverPhoto,
+                  posteducation: snap.data().posteducation,
+                  postsalary: snap.data().postsalary,
+                  posttype: snap.data().posttype,
+                  date: snap.data().date,
+                  PostCoverPhotoName: snap.data().PostCoverPhotoName,
+                  posttitle: snap.data().posttitle,
+                  postProfileEmail: object.data().email,
+                  postProfileDescription: object.data().description,
+                  postProfilelocation: object.data().location,
+                  postProfilename: object.data().name,
+                  postProfileImage: object.data().profileimage,
+                  postvacancy: snap.data().postvacancy,
+                  postProfileID: snap.data().profileId,
+                };
+                state.Post.push(data);
+              });
             }
-            )
           }
-        })
-    })
-    state.postLoaded = true;
-    // console.log(state.Post)
-  },
+        });
+      });
+      state.postLoaded = true;
+    },
+    
+    
   getPostDetail({state}){
     const PostRef = getDoc(doc(db, "postDetail","GetDetail")).then((object) =>{
 
@@ -314,47 +318,49 @@ export default createStore({
         });
       }))
     },
-    async getOrganizeVerify({state}){
+    async getOrganizeVerify({ state }) {
       const OrganizeRef = query(collection(db, "user"), where("verify", "==", 0));
-      onSnapshot(OrganizeRef,((OrganizeDoc =>{
+      onSnapshot(OrganizeRef, ((OrganizeDoc) => {
         OrganizeDoc.forEach((information) => {
-          if(!state.OrganizeVerify.some((snap) => snap.profileID === information.id)){
-            const postIDRef = (doc(db,"user",information.data().profileID))
-            getDoc(postIDRef).then((organize) =>{
-                const data ={
-                profileID:organize.data().profileID,
-                name:organize.data().name,
-                profileimage:organize.data().profileimage,
-                documentimage:organize.data().doucmentimage,
-                profiledescription:organize.data().description,
-                verify:organize.data().verify,
-                }
-                state.OrganizeVerify.push(data)
-             
-            })
-  
+          // Check if the entire 'information' object already exists in the array
+          if (!state.OrganizeVerify.some((item) => isEqual(item, information.data()))) {
+            const postIDRef = doc(db, "user", information.data().profileID);
+            getDoc(postIDRef).then((organize) => {
+              const data = {
+                profileID: organize.data().profileID,
+                name: organize.data().name,
+                profileimage: organize.data().profileimage,
+                documentimage: organize.data().doucmentimage,
+                profiledescription: organize.data().description,
+                verify: organize.data().verify,
+              };
+              state.OrganizeVerify.push(data);
+            });
           }
         });
-      })))
-
+      }));
     },
-    async getOrganizationPost({state}){
+    
+    async getOrganizationPost({state}) {
       const OrganizationPostRef = query(collection(db, "post"), where("profileId", "==", auth.currentUser.uid));
-      onSnapshot(OrganizationPostRef,((OrganizationPost) =>{
+      onSnapshot(OrganizationPostRef, ((OrganizationPost) => {
         OrganizationPost.forEach((post) => {
-          if(!state.MyPost.some((snap) => snap.PostID === post.id)){
-           const data={
-            PostID:post.data().PostID,
-            posttitle:post.data().posttitle
-           }
-           state.MyPost.push(data)
-  
+          if (!state.MyPost.some((snap) => snap.PostID === post.id)) {
+            const data = {
+              PostID: post.data().PostID,
+              posttitle: post.data().posttitle
+            }
+            state.MyPost.push(data)
           }
-          console.log(state.MyPost)
         });
       }))
-
+      
+      if (!Array.isArray(state.MyPost)) {
+        state.MyPost = []
+      }
     },
+    
+    
     async DeletePost({commit},payload){
       const getPost = await deleteDoc(doc(db,"post",payload))
       commit("fliterPost",payload)

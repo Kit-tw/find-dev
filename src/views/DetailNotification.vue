@@ -41,7 +41,8 @@
 
                     <div class="col-12">
                         <h4  v-if="role == 'organize' && status == 'รอยืนยัน' "  class="mb-3">นัดวันสัมภาษณ์</h4>
-                        <input v-if="role == 'organize' && status == 'รอยืนยัน' " type="date" v-model="date" />
+                        <input v-if="role == 'organize' && status == 'รอยืนยัน'" type="date" v-model="date" :min="getCurrentDate()" />
+
                         <button v-if="role == 'organize' && status == 'รอยืนยัน' " class="btn btn-success w-100" type="submit" @click="AcceptJob">ยอมรับงาน</button>
                     </div>
 
@@ -119,6 +120,13 @@ export default {
         // console.log(this.currentPost)
     },
     methods:{
+        getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
         AcceptJob(){
             const newDocRef = doc(db, "postnotification",this.postnotificationID)
             updateDoc(newDocRef,{

@@ -38,7 +38,8 @@
                             <input type="text" name="phone" placeholder="เบอร์โทร" v-model="phone" />
                         </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon" icon="fa-solid fa-cake-candles" /></span>
-                            <input type="date" name="date" placeholder="เดือน/วัน/ปี เกิด" v-model="date" />
+                            <input type="date" name="date" placeholder="เดือน/วัน/ปี เกิด" v-model="date" :max="getCurrentDate()" />
+
                         </div>
                         <div class="input_field"> <span><font-awesome-icon class="icon"
                                     icon="fa-solid fa-circle-info" /></span>
@@ -124,6 +125,13 @@ export default {
             this.$store.commit("fileNameChangeProfileResume", fileName);
             this.$store.commit("createResumeURL", URL.createObjectURL(this.filedocument));
         },
+        getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
         async register() {
             if (this.email !== "" && this.password !== "" && this.lastname !== "" && this.firstname !== "" && this.phone !== "" && this.phone.length == 10 && this.date !=="") {
                 if (this.fileprofile && this.filedocument) {
