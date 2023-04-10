@@ -125,7 +125,7 @@ export default {
             );
         },
         uploadPost() {
-            if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.postEducation !== "" && this.postsalary > 0  && this.Vacancy > 0) {
+            if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.postEducation !== "" && parseInt(this.postsalary) > 0   && this.Vacancy > 0) {
                 if (this.file) {
                     this.loading = true;
                     const stroge = getStorage()

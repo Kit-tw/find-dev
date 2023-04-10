@@ -3,7 +3,7 @@
               <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
                   <div class="tab-content">
                       <div id="tab-1" class="tab-pane fade show p-0 active">
-                          <div class="job-item p-4 mb-4">
+                          <div class="job-item p-4 mb-4" >
                               <div class="row g-4">
                                   <div class="col-sm-12 col-md-8 d-flex align-items-center">
                                       <img class="flex-shrink-0 img-fluid border rounded" :src="post.postProfileImage" alt="" style="width: 80px; height: 80px;">

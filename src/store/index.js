@@ -171,7 +171,10 @@ export default createStore({
     },fliterNotificationForDelete(state,payload){
       state.PostNotification = state.PostNotification.filter((post) => post.postID !== payload)
 
-    }
+    },
+    setPostDetailEducation(state, payload) {
+      state.PostDetailEducation = payload
+    } 
   },
   actions: {
     async getcurrentUser({ commit }) {

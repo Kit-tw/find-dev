@@ -98,7 +98,6 @@ export default {
         this.currentPost = await this.$store.state.Post.filter((post) => {
             return post.PostID === this.$route.params.postid;
         });
-        console.log(this.currentPost)
         this.currentPost.forEach((snap) => {
             this.postID = snap.PostID
             this.posttitle = snap.posttitle
