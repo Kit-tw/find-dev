@@ -10,7 +10,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="col-md-5 col-12 d-flex flex-column align-items-end justify-content-center">
+                                    class="col-md-11 col-12 d-flex flex-column align-items-end justify-content-center">
                                     <div class="d-flex mb-3">
                                         <router-link
                                             :to="{ name: 'DetailOrganize', params: { OrganizeID: this.post.profileID } }"
