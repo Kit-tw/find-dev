@@ -142,6 +142,7 @@ export default {
       status: "รอยืนยัน",
     });
     this.$store.state.appliedPosts.push(this.postID);
+    //Local storage is a built-in web API that allows you to store key/value pairs in the browser. 
     localStorage.setItem("appliedPosts", JSON.stringify(this.$store.state.appliedPosts));
 
     alert("สมัครเรียบร้อย");
