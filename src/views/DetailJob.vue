@@ -133,8 +133,6 @@ export default {
       alert("คุณได้สมัครงานนี้ไปแล้ว");
       return;
     }
-    
-    // create a new document in the "postnotification" collection
     const newDocRef = doc(collection(db, "postnotification"));
     setDoc(newDocRef, {
       postnotiID: newDocRef.id,
@@ -143,8 +141,6 @@ export default {
       postcreatorID: this.postProfileID,
       status: "รอยืนยัน",
     });
-
-    // update the appliedPosts array in the Vuex store and local storage
     this.$store.state.appliedPosts.push(this.postID);
     localStorage.setItem("appliedPosts", JSON.stringify(this.$store.state.appliedPosts));
 

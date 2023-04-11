@@ -252,41 +252,46 @@ export default createStore({
         state.PostDetailEducation = object.data().Education,
         state.PostDetailType = object.data().Type
     })
-  
-  // console.log(state.Post)
 },
-    async getPostNotifacionUser({state}){
-      const postnotificaionRef = query(collection(db, "postnotification"), where("user", "==", auth.currentUser.uid));
-      onSnapshot(postnotificaionRef,((postnotiDoc =>{
-        postnotiDoc.forEach((notification) => {
-          if(!state.PostNotification.some((snap) => snap.postnotificationID === notification.id)){
-            const postIDRef = (doc(db,"post",notification.data().postID))
-            getDoc(postIDRef).then((post) =>{
-              const creatorRef = (doc(db,"user",notification.data().postcreatorID))
-              getDoc(creatorRef).then((creator) =>{
-                const data ={
-                  postnotificationID:notification.data().postnotiID,
-                  posttitle:post.data().posttitle,
-                  posttype:post.data().posttype,
-                  postsalary:post.data().postsalary,
-                  posteducation:post.data().posteducation,
-                  status:notification.data().status,
-                  postcreatorname:creator.data().name,
-                  postcreatorImage:creator.data().profileimage,
-                  postdate:notification.data().date,
-                }
-                state.PostNotification.push(data)
-              })
-            })
-  
-          }
-        });
-      })))
+async getPostNotifacionUser({state}){
+  const postnotificaionRef = query(collection(db, "postnotification"), where("user", "==", auth.currentUser.uid));
+  if (state.postNotifUserUnsubscribe) {
+    state.postNotifUserUnsubscribe();
+  }
+  const unsubscribe = onSnapshot(postnotificaionRef,((postnotiDoc =>{
+    postnotiDoc.forEach((notification) => {
+      if(!state.PostNotification.some((snap) => snap.postnotificationID === notification.id)){
+        const postIDRef = (doc(db,"post",notification.data().postID))
+        getDoc(postIDRef).then((post) =>{
+          const creatorRef = (doc(db,"user",notification.data().postcreatorID))
+          getDoc(creatorRef).then((creator) =>{
+            const data ={
+              postnotificationID:notification.data().postnotiID,
+              posttitle:post.data().posttitle,
+              posttype:post.data().posttype,
+              postsalary:post.data().postsalary,
+              posteducation:post.data().posteducation,
+              status:notification.data().status,
+              postcreatorname:creator.data().name,
+              postcreatorImage:creator.data().profileimage,
+              postdate:notification.data().date,
+            }
+            state.PostNotification.push(data)
+          })
+        })
 
-    },
+      }
+    });
+  })));
+
+  state.postNotifUserUnsubscribe = unsubscribe;
+},
     async getPostNotifacionOrganize({state}){
       const postnotificaionRef = query(collection(db, "postnotification"), where("postcreatorID", "==", auth.currentUser.uid));
-      onSnapshot(postnotificaionRef,((postnotiDoc) =>{
+      if (state.PostNotifacionOrganizeUnsubscribe) {
+        state.PostNotifacionOrganizeUnsubscribe();
+      }
+      const unsubscribe = onSnapshot(postnotificaionRef,((postnotiDoc) =>{
         postnotiDoc.forEach((notification) => {
           if(!state.PostNotification.some((snap) => snap.postnotificationID === notification.id)){
             const postIDRef = (doc(db,"post",notification.data().postID))
@@ -320,12 +325,13 @@ export default createStore({
           }
         });
       }))
+      state.PostNotifacionOrganizeUnsubscribe = unsubscribe;
     },
     async getOrganizeVerify({ state }) {
       const OrganizeRef = query(collection(db, "user"), where("verify", "==", 0));
       onSnapshot(OrganizeRef, ((OrganizeDoc) => {
         OrganizeDoc.forEach((information) => {
-          // Check if the entire 'information' object already exists in the array
+
           if (!state.OrganizeVerify.some((item) => isEqual(item, information.data()))) {
             const postIDRef = doc(db, "user", information.data().profileID);
             getDoc(postIDRef).then((organize) => {
