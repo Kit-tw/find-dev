@@ -36,13 +36,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="title">เงินเดือน</label>
-                    <input type="number" class="form-control" name="title" v-model="postsalary" />
-                </div>
-                <div class="form-group">
-                    <label for="title">จำนวนคน</label>
-                    <input type="number" class="form-control" name="title" v-model="Vacancy" />
-                </div>
+  <label for="title">เงินเดือน</label>
+  <input type="number" class="form-control" name="title" v-model.number="postsalary" step="1" />
+</div>
+<div class="form-group">
+  <label for="title">จำนวนคน</label>
+  <input type="number" class="form-control" name="title" v-model.number="Vacancy" step="1" />
+</div>
+
                 <div class="form-group">
                     <label for="title">รายละเอียดและสวัสดิการ</label>
                     <VueEditor :editor-toolbar="customToolbar" v-model="PostHTML" />
@@ -125,61 +126,63 @@ export default {
             );
         },
         uploadPost() {
-            if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.postEducation !== "" && parseInt(this.postsalary) > 0   && this.Vacancy > 0) {
-                if (this.file) {
-                    this.loading = true;
-                    const stroge = getStorage()
-                    
-                    const storageRef = ref(stroge, `documents/PostCoverPhotos/${this.$store.state.PostPhotoName}`);
-                    const uploadTask = uploadBytesResumable(storageRef, this.file);
+  if (this.posttitle.length !== 0 && this.PostHTML.length !== 0 && this.posttype !== "" && this.postEducation !== "" && Number.isInteger(parseInt(this.postsalary)) && parseInt(this.postsalary) > 0 && Number.isInteger(parseInt(this.Vacancy)) && parseInt(this.Vacancy) > 0) {
+    if (this.file) {
+      this.loading = true;
+      const stroge = getStorage()
+      
+      const storageRef = ref(stroge, `documents/PostCoverPhotos/${this.$store.state.PostPhotoName}`);
+      const uploadTask = uploadBytesResumable(storageRef, this.file);
 
-                    uploadTask.on("state_changed", (snapshot) => { console.log(snapshot); },
-                        (err) => {
-                            console.log(err);
-                            this.loading = false;
-                        },
-                         async () => {
-                            getDownloadURL(uploadTask.snapshot.ref).then(async url => {
-                            const newDocRef = doc(collection(db, "post"))
-                            this.downloadURL = url;
-                            setDoc(
-                                newDocRef,
-                                {
-                                    PostID: newDocRef.id,
-                                    PostHTML: this.PostHTML,
-                                    posttitle: this.posttitle,
-                                    postsalary: this.postsalary,
-                                    posteducation: this.postEducation,
-                                    posttype: this.posttype,
-                                    profileId: this.ProfileId,
-                                    PostCoverPhoto: url,
-                                    postvacancy:this.Vacancy,
-                                    PostCoverPhotoName: this.PostCoverPhotoName,
-                                    date:serverTimestamp(),
-                                }
-                            )
-                            
-                            // await this.$store.dispatch("getPost");
-                            this.loading = false;
-                            this.$router.push({ name: "Home"});
-                        })}
-                    );
-                    return;
-                }
-                this.error = true;
-                this.errorMsg = "กรุณาใส่รูปภาพเสริม!";
-                setTimeout(() => {
-                    this.error = false;
-                }, 5000);
-                return;
-            }
-            this.error = true;
-            this.errorMsg = "กรุณาใส่ทุกช่อง";
-            setTimeout(() => {
-                this.error = false;
-            }, 5000);
-            return;
+      uploadTask.on("state_changed", (snapshot) => { console.log(snapshot); },
+        (err) => {
+          console.log(err);
+          this.loading = false;
         },
+        async () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async url => {
+            const newDocRef = doc(collection(db, "post"))
+            this.downloadURL = url;
+            setDoc(
+              newDocRef,
+              {
+                PostID: newDocRef.id,
+                PostHTML: this.PostHTML,
+                posttitle: this.posttitle,
+                postsalary: parseInt(this.postsalary),
+                posteducation: this.postEducation,
+                posttype: this.posttype,
+                profileId: this.ProfileId,
+                PostCoverPhoto: url,
+                postvacancy: parseInt(this.Vacancy),
+                PostCoverPhotoName: this.PostCoverPhotoName,
+                date:serverTimestamp(),
+              }
+            )
+
+            // await this.$store.dispatch("getPost");
+            this.loading = false;
+            this.$router.push({ name: "Home"});
+          })
+        }
+      );
+      return;
+    }
+    this.error = true;
+    this.errorMsg = "กรุณาใส่รูปภาพเสริม!";
+    setTimeout(() => {
+      this.error = false;
+    }, 5000);
+    return;
+  }
+  this.error = true;
+  this.errorMsg = "กรุณาใส่ทุกช่อง";
+  setTimeout(() => {
+    this.error = false;
+  }, 5000);
+  return;
+},
+
 
     },
     computed: {

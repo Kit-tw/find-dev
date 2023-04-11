@@ -1,31 +1,27 @@
 <template>
- 
-              <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
-                  <div class="tab-content">
-                      <div id="tab-1" class="tab-pane fade show p-0 active">
-                          <div class="job-item p-4 mb-4" >
-                              <div class="row g-4">
-                                  <div class="col-sm-12 col-md-8 d-flex align-items-center">
-                                      <img class="flex-shrink-0 img-fluid border rounded" :src="post.postProfileImage" alt="" style="width: 80px; height: 80px;">
-                                      <div class="text-start ps-4">
-                                          <h5 class="mb-3">{{post.posttitle}}</h5>
-                                          <span class="text-truncate me-3"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fa-solid fa-briefcase" />{{post.posttype}}</span>
-                                          <span class="text-truncate me-3"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fas fa-graduation-cap" />{{post.posteducation}}</span>
-                                          <span class="text-truncate me-0"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fa-solid fa-money-check-dollar" />{{post.postsalary}} บาท</span>
-                                      </div>
-                                  </div>
-                                  <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-                                      <div class="d-flex mb-3"> 
-                                          <router-link :to="{name : 'DetailJob' ,params : {postid : this.post.PostID}}" class="button-3">ดูเพิ่มเติม</router-link>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                  </div>
-              </div>
-          </div>
- 
+  <div class="job-item p-4 mb-4">
+    <div class="row g-4 job-details">
+  <div class="col-md-1 col-12 d-flex align-items-center">
+    <img class="flex-shrink-0 img-fluid border rounded" :src="post.postProfileImage" alt="" style="width: 80px; height: 80px;">
+  </div>
+  <div class="col-md-6 col-12 d-flex flex-column">
+    <h5 class="mb-3">{{post.posttitle}}</h5>
+    <div class="d-flex mb-3">
+      <span class="text-truncate me-3"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fa-solid fa-briefcase" />{{post.posttype}}</span>
+      <span class="text-truncate me-3"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fas fa-graduation-cap" />{{post.posteducation}}</span>
+      <span class="text-truncate me-0"><font-awesome-icon :style="{color: '#00B074'}" class="me-2 " icon="fa-solid fa-money-check-dollar" />{{post.postsalary}} บาท</span>
+    </div>
+  </div>
+  <div class="col-md-5 col-12 d-flex flex-column align-items-end justify-content-center">
+    <div class="d-flex mb-3"> 
+      <router-link :to="{name : 'DetailJob' ,params : {postid : this.post.PostID}}" class="button-3">ดูเพิ่มเติม</router-link>
+    </div>
+  </div>
+</div>
+
+  </div>
 </template>
+
 
 <script>
 export default {
@@ -44,6 +40,7 @@ props:["post"]
   border-radius: 2px;
   box-shadow: 0 0 45px rgba(0, 0, 0, .08);
   transition: .5s;
+  
 }
 
 .job-item:hover {
