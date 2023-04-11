@@ -1,30 +1,34 @@
 <template>
   <div class="job-item p-4 mb-4">
     <div class="row g-4">
-      <div class="col-sm-12 col-md-8 d-flex align-items-center">
+      <div class="col-md-1 col-12 d-flex align-items-center">
         <img class="flex-shrink-0 img-fluid border rounded-circle" v-if="role == 'user'" :src="post.postcreatorImage"
           alt="" style="width: 80px; height: 80px;">
         <img class="flex-shrink-0 img-fluid border rounded-circle" v-if="role == 'organize'" :src="post.postuserimage"
           alt="" style="width: 80px; height: 80px;">
-        <div class="text-start ps-4">
+        </div>
+        <div class="col-md-7 col-12 d-flex flex-column">
           <h5 class="mb-3" v-if="role == 'user'">{{ post.posttitle }}</h5>
           <h5 class="mb-3" v-if="role == 'organize'">สมัครโดย {{ post.postuserfirstname }} {{ post.postuserlastname }}</h5>
-          <span class="text-truncate me-3" v-if="role == 'user'"><font-awesome-icon :style="{ color: '#00B074' }"
+          <div class="d-flex mb-3" v-if="role == 'user'">
+          <span class="text-truncate me-3" ><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fa-solid fa-briefcase" />{{ post.posttype }}</span>
-          <span class="text-truncate me-3" v-if="role == 'user'"><font-awesome-icon :style="{ color: '#00B074' }"
+          <span class="text-truncate me-3"><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fas fa-graduation-cap" />{{ post.posteducation }}</span>
-          <span class="text-truncate me-0" v-if="role == 'user'"><font-awesome-icon :style="{ color: '#00B074' }"
+          <span class="text-truncate me-0"><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fa-solid fa-money-check-dollar" />{{ post.postsalary }} บาท </span>
-
-          <span class="text-truncate me-3" v-if="role == 'organize'"><font-awesome-icon :style="{ color: '#00B074' }"
+            </div>
+            <div class="d-flex mb-3" v-if="role == 'organize'">
+          <span class="text-truncate me-3" ><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fa-solid fa-pen" />{{ post.posttitle }}</span>
-          <span class="text-truncate me-3" v-if="role == 'organize'"><font-awesome-icon :style="{ color: '#00B074' }"
+          <span class="text-truncate me-3"><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fas fa-graduation-cap" />{{ post.postusereducation }}</span>
-          <span class="text-truncate me-3" v-if="role == 'organize'"><font-awesome-icon :style="{ color: '#00B074' }"
+          <span class="text-truncate me-3"><font-awesome-icon :style="{ color: '#00B074' }"
               class="me-2 " icon="fa-solid fa-venus-mars" />{{ post.postusergender }}</span>
         </div>
-      </div>
-      <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+        </div>
+      
+      <div class="col-md-1 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
         <div class="d-flex mb-3">
           <span class="text-truncate me-3">Status : </span>
           <span class="text-truncate me-3">{{ post.status }}</span>

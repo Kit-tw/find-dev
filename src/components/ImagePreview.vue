@@ -1,7 +1,7 @@
 <template>
   <div class="modal" ref="modal">
     <div class="modal-content">
-      <font-awesome-icon  @click="closePreview" :icon="['fas','xmark-circle']" class="icon"/>
+      <font-awesome-icon @click="closePreview" :icon="['fas', 'xmark-circle']" class="icon" />
       <img :src="this.PostCoverPhoto" alt="" />
     </div>
   </div>
@@ -36,6 +36,7 @@ export default {
   align-items: center;
   height: 100%;
   width: 100%;
+
   .modal-content {
     display: flex;
     justify-content: center;
@@ -46,6 +47,7 @@ export default {
     width: 600px;
     padding: 50px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
     .icon {
       width: 24px;
       height: auto;
@@ -56,6 +58,7 @@ export default {
       right: 15px;
       color: #303030;
     }
+
     img {
       margin-top: 16px;
       display: block;
@@ -64,5 +67,4 @@ export default {
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
   }
-}
-</style>
+}</style>
